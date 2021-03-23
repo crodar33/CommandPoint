@@ -1,0 +1,73 @@
+<!DOCTYPE html><html>
+    <head>
+        <title>Inverter state</title>
+        <style>
+            .registers ul {
+                float: left;
+                margin: 0 0 10px 0;
+            }
+            .registers div {
+                vertical-align: top;
+                display: inline-block;
+            }
+            .left-menu {
+                float: left;
+            }
+            .body {
+                float: left;
+            }
+            .left-menu > a {
+                display: block;
+                background: #111;
+                width: 90%;
+                margin: 4px;
+                padding: 4px;
+                border-radius: 10px;
+                text-align: center;
+                color: #fff;
+            }
+            #menu-state {
+                display: none;
+            }
+            @media screen and (max-width: 980px) {
+                body {
+                    font-size: 3em
+                }
+                .left-menu {
+                    display: block;
+                    width: 3em;
+                    height: 3em;
+                    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxMCUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGxpbmUgeDE9IjUlIiB5MT0iMjAlIiB4Mj0iOTUlIiB5Mj0iMjAlIj48L2xpbmU+PGxpbmUgeDE9IjUlIiB5MT0iNTAlIiB4Mj0iOTUlIiB5Mj0iNTAlIj48L2xpbmU+PGxpbmUgeDE9IjUlIiB5MT0iODAlIiB4Mj0iOTUlIiB5Mj0iODAlIj48L2xpbmU+PC9zdmc+")
+                }
+                .left-menu > a {
+                    width: 100%;
+                    display: none;
+                }
+                #menu-state:checked + .left-menu {
+                    background-image: none;
+                    width: inherit;
+                    height: inherit;
+                }
+                #menu-state:checked + .left-menu:before {
+                    content: "";
+                    display: block;
+                    width: 3em;
+                    height: 3em;
+                    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxMCUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGxpbmUgeDE9IjUlIiB5MT0iMjAlIiB4Mj0iOTUlIiB5Mj0iMjAlIj48L2xpbmU+PGxpbmUgeDE9IjUlIiB5MT0iNTAlIiB4Mj0iOTUlIiB5Mj0iNTAlIj48L2xpbmU+PGxpbmUgeDE9IjUlIiB5MT0iODAlIiB4Mj0iOTUlIiB5Mj0iODAlIj48L2xpbmU+PC9zdmc+")
+                }
+                #menu-state:checked + .left-menu > a {
+                    display: block;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <input type="checkbox" name="menu-state" id="menu-state" />
+        <label for="menu-state" class='left-menu'>
+            <a href='/'>Index</a>
+            <a href='/update_battery'>Update state</a>
+            <a href='/battery-start-pull'>Start read battery</a>
+            <a href='/battery-stop-pull'>Stop read battery</a>
+            <a href='/battery_raw'>Raw battery state</a>
+        </label>
+        <div class='body'>
