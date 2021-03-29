@@ -23,11 +23,11 @@ return function(readRegisters)
         if self.readDiff >= self.readRegisters then
             self.readDiff = 0
         end
-        self:startPullData()
+        --self:startPullData()
     end
         
     battery.startPullData = function(self)
-        timer:register(1000, tmr.ALARM_SINGLE, function() battery:requestUpdates() end)
+        timer:register(1000, tmr.ALARM_AUTO, function() if httpMuted==0 then battery:requestUpdates() end end)
         timer:start()
     end
 

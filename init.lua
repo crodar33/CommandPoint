@@ -63,23 +63,26 @@ wifi.eventmon.register(wifi.eventmon.STA_CONNECTED, wifiConnectEvent)
 wifi.eventmon.register(wifi.eventmon.STA_GOT_IP, wifiGotIpEvent)
 wifi.eventmon.register(wifi.eventmon.STA_DISCONNECTED, wifiDisconnectEvent)
 
+httpMuted = 0
 battery = dofile("battery.lua")()
 battery:readStaticData()
 --periodically update static data
 local timer1 = tmr.create()
-timer1:register(20500, tmr.ALARM_AUTO, function() print("started pull of static data") battery:readStaticData() end)
-   ---timer1:start()
+timer1:register(20500, tmr.ALARM_AUTO, function() if httpMuted==0 then print("started pull of static data") battery:readStaticData() end end)
+timer1:start()
 --pull battery state
 local timer2 = tmr.create()
-timer2:register(2000, tmr.ALARM_SINGLE, function() print("started pull battery data") battery:startPullData() end)
-   ---timer2:start()
+timer2:register(2000, tmr.ALARM_SINGLE, function() if httpMuted==0 then print("started pull battery data") battery:startPullData() end end)
+timer2:start()
 --normal Mod
+canStates = 1
 inverterCmdMod = 0
+inverterModTimer = 0
 dofile("http_server_instance.lc")
 dofile("can_a1_test_init4.lua")
 local timer3 = tmr.create()
-timer3:register(600, tmr.ALARM_AUTO, function() dofile("can_a3_inform_invertor.lua") end)
-   ---timer3:start()
+timer3:register(600, tmr.ALARM_AUTO, function() if httpMuted==0 then dofile("can_a3_inform_invertor.lua") end end)
+timer3:start()
 print("===========================================")
 print("STARTED")
 print("===========================================")

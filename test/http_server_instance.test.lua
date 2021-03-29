@@ -1,10 +1,17 @@
 dofile("./../test/moc.node.lua")
 dofile("./../test/moc.net.lua")
-dofile("./http_server_instance.lua")
+
+local originalDofile = dofile
 
 function dofile(file) 
-    print("ffffffffffffffff")
+    if (file:find(".lc")) then
+        file = file:gsub(".lc", ".lua");
+    end
+    return originalDofile(file)
 end
+
+httpMuted = 0
+dofile("./http_server_instance.lua")
 
 socket = net.mocSockets[1]
 socket.callback(socket)
@@ -21,8 +28,9 @@ Pragma: no-cache
 Cache-Control: no-cache
 ]]
 socket.eventCallback["receive"](socket, request)
+print("http mute count " .. httpMuted)
 
-request = [[GET /better-inverter-state HTTP/1.1
+request = [[POST /better-inverter-state HTTP/1.1
 Host: 192.168.42.36
 User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:86.0) Gecko/20100101 Firefox/86.0
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
@@ -35,5 +43,7 @@ Cache-Control: no-cache
 Content-Length: 15
 
 state=1&time=10
+
 ]]
 socket.eventCallback["receive"](socket, request)
+print("http mute count " .. httpMuted)

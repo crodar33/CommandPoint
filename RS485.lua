@@ -26,7 +26,7 @@ return function(readLen, RW_pin, RX_pin, TX_pin, baund)
         gpio.write(RW_pin, gpio.LOW)
         --set callback on what we waiting
         --print("Requested ", addr, funct, from, count)
-        rs.sUart:on("data", 3 + count * 2 + 2, function(data) dofile("RS485_RegistersCallback.lua")(rs, data) end)
+        rs.sUart:on("data", 3 + count * 2 + 2, function(data) dofile("RS485_RegistersCallback.lc")(rs, data) end)
     end
     
     local i

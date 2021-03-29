@@ -34,6 +34,17 @@ local function httpCallback(httpServer, sck, headers)
         help = nil
         help2 = nil
     elseif headers.url=='/better-inverter-state' then
+        --[[print(headers.post)
+        print("post: ")
+        for i,j in pairs(headers.post) do
+            print(" ", i, j, #i)
+        end]]
+        if (headers.post~=nil and headers.post.state~=nil and headers.post.time~=nil) then
+            --set forc battery mode
+            inverterCmdMod = tonumber(headers.post.state)
+            inverterModTimer = tmr.time() + tonumber(headers.post.time) * 60
+            print("Set new battery mod " .. inverterCmdMod .." on time " .. (inverterModTimer - tmr.time()))
+        end
         httpServer.sendHeader(sck, dofile("http_headers.lc")[301])
     else
         httpServer.sendHeader(sck, dofile("http_headers.lc")[404])

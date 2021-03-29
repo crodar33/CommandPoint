@@ -58,6 +58,7 @@ Battery state:<br/>
         <?= inverterCmdMod==0 and "normal" or "" ?>
         <?= inverterCmdMod==1 and "force change" or "" ?>
         <?= inverterCmdMod==2 and "don't use" or "" ?>
+        <?= inverterCmdMod~=0 and (inverterModTimer - tmr.time()) or "" ?>
         <form action="/better-inverter-state" method="post">
             Change state
             <select name="state">

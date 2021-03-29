@@ -13,6 +13,7 @@ return function(httpCallback)
         local finished = false
 
         local function onReceive(connection, data) 
+            httpMuted = httpMuted + 1
             connectionHandler = coroutine.create(function(connection, data) 
                 local headers = dofile("http_server_header_parser.lc")(data)
                 if (headers==nil) then
@@ -37,6 +38,7 @@ return function(httpCallback)
                 connectionHandler = false
                 connection:close()
                 collectgarbage()
+                httpMuted = httpMuted - 1
             end
         end
 
@@ -47,16 +49,18 @@ return function(httpCallback)
                 local status, err = coroutine.resume(connectionHandler, connection, data)
                 --print("status", connectionHandler, statis, err, connectionHandlerStatus, node.heap())
                 if err ~= nil then 
-                    print("handler have broken", connectionHandler, node.heap())
+                    print("handler have broken", connectionHandler, node.heap(), err)
                     connection:close()
                     connectionHandler = nil
                     collectgarbage()
+                    httpMuted = httpMuted - 1
                 end
             elseif connectionHandlerStatus=='dead' then
                 print("request have done", connectionHandler, node.heap())
                 connection:close()
                 connectionHandler = nil
                 collectgarbage()
+                httpMuted = httpMuted - 1
             end
         end
 
