@@ -20,7 +20,7 @@ return function(readLen, RW_pin, RX_pin, TX_pin, baund)
         end
         --request new data
         local sendData = struct.pack(">BBHH", addr, funct, from, count)    
-        local crc = dofile("crc16_arc_calc.lua")(sendData)
+        local crc = dofile("crc16_arc_calc.lc")(sendData)
         gpio.write(RW_pin, gpio.HIGH)
         rs.sUart:write(sendData .. struct.pack("<H", crc))
         gpio.write(RW_pin, gpio.LOW)

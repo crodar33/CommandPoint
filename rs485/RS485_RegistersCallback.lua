@@ -17,7 +17,7 @@ return function(rs, data)
         return nil
     end
     local messageBody = data:sub(1, count * 2 + 3)
-    local dataCrc16 = dofile("crc16_arc_calc.lua")(messageBody)
+    local dataCrc16 = dofile("crc16_arc_calc.lc")(messageBody)
     local messageCrc16 = struct.unpack("<H", data, 4 + count * 2)
     if dataCrc16 ~= messageCrc16 then
         print("bad crc " .. string.format("%04X", dataCrc16) 

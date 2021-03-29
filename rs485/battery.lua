@@ -13,7 +13,7 @@ return function(readRegisters)
     print("battery 2", node.heap())
     local battery = {}
     battery.readRegisters = readRegisters
-    battery.remoteState = dofile("RS485.lua")(readRegisters, 3, 4, 2)
+    battery.remoteState = dofile("RS485.lc")(readRegisters, 3, 4, 2)
     battery.readDiff = 0
 
     battery.requestUpdates = function (self) 

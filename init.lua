@@ -4,6 +4,7 @@ print("===========================================")
 wifi.setmode(wifi.STATION)
 local station_cfg= require("wifi_config")
 wifi.sta.config(station_cfg)
+--[[
 ntpTime = 0
 local wifiGotIpEvent = function(T)
     print("My IP: " .. T.IP)
@@ -22,6 +23,7 @@ local wifiGotIpEvent = function(T)
     end)
     timerNtp:start()
 end
+]]
 local wifiConnectEvent = function(T)
   print("Connection to AP("..T.SSID..") established!")
   print("Waiting for IP address...")
@@ -64,7 +66,7 @@ wifi.eventmon.register(wifi.eventmon.STA_GOT_IP, wifiGotIpEvent)
 wifi.eventmon.register(wifi.eventmon.STA_DISCONNECTED, wifiDisconnectEvent)
 
 httpMuted = 0
-battery = dofile("battery.lua")()
+battery = dofile("battery.lc")()
 battery:readStaticData()
 --periodically update static data
 local timer1 = tmr.create()
