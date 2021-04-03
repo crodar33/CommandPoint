@@ -1,0 +1,28 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>KiCad BOM Example 5</title>
+    </head>
+    <body>
+    <h1>/home/dandi/extdata/dev/inverter/board/communication_brain/communication_brain.sch</h1>
+    <p>Сб 16 янв 2021 11:32:59</p>
+    <p>Eeschema 5.1.6+dfsg1-1</p>
+    <p><b>Component Count:</b>9</p>
+    <table>
+    <tr><th style='width:640px'>Ref</th><th>Qnty</th><th>Value</th><th>Part</th><th>Footprint</th><th>Description</th><th>Vendor</th></tr>
+    <tr><td>C1</td><td>1</td><td>100mF</td><td>Device:CP</td><td>Capacitor_THT:C_Radial_D5.0mm_H5.0mm_P2.00mm</td><td>Polarized capacitor</td><td></td></tr>
+    <tr><td>C2</td><td>1</td><td>1000mF</td><td>Device:CP</td><td>Capacitor_THT:C_Radial_D5.0mm_H5.0mm_P2.00mm</td><td>Polarized capacitor</td><td></td></tr>
+    <tr><td>D1</td><td>1</td><td>1N5822</td><td>Diode:1N5822</td><td>Diode_THT:D_DO-201AD_P15.24mm_Horizontal</td><td>40V 3A Schottky Barrier Rectifier Diode, DO-201AD</td><td></td></tr>
+    <tr><td>L1</td><td>1</td><td>100mH</td><td>pspice:INDUCTOR</td><td>Inductor_THT:Choke_Schaffner_RN202-04-8.8x18.2mm</td><td>Inductor symbol for simulation only</td><td></td></tr>
+    <tr><td>R1</td><td>1</td><td>5.6k</td><td>Device:R</td><td>Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Vertical</td><td>Resistor</td><td></td></tr>
+    <tr><td>R2</td><td>1</td><td>1.8k</td><td>Device:R</td><td>Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Vertical</td><td>Resistor</td><td></td></tr>
+    <tr><td>U1</td><td>1</td><td>LM2576HVT-ADJ</td><td>Regulator_Switching:LM2576HVT-ADJ</td><td>Package_TO_SOT_THT:TO-220-5_Vertical</td><td>Adjustable Output Voltage, 3A SIMPLE SWITCHER® Step-Down Voltage Regulator, High Voltage Input, TO-220-5</td><td></td></tr>
+    <tr><td>U2</td><td>1</td><td>ESP8266EX</td><td>MCU_Espressif:ESP8266EX</td><td>Package_DFN_QFN:QFN-32-1EP_5x5mm_P0.5mm_EP3.45x3.45mm</td><td>Highly integrated Wi-Fi SoC, QFN-32</td><td></td></tr>
+    <tr><td>U3</td><td>1</td><td>L78L33_TO92</td><td>Regulator_Linear:L78L33_TO92</td><td>Package_TO_SOT_THT:TO-92_Inline</td><td>Positive 100mA 30V Linear Regulator, Fixed Output 3.3V, TO-92</td><td></td></tr><!--TABLEROW-->
+    </table>
+    </body>
+</html>
+    
