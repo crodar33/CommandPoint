@@ -11,7 +11,7 @@ function dofile(file)
 end
 
 httpMuted = 0
-dofile("./http_server_instance.lua")
+httpServer = dofile("./http_server_core.lua")()
 
 socket = net.mocSockets[1]
 socket.callback(socket)
@@ -29,6 +29,7 @@ Cache-Control: no-cache
 ]]
 socket.eventCallback["receive"](socket, request)
 print("http mute count " .. httpMuted)
+print()
 
 request = [[POST /better-inverter-state HTTP/1.1
 Host: 192.168.42.36

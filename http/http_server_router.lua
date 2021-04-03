@@ -1,10 +1,21 @@
-
-local function httpCallback(httpServer, sck, headers)
+-- HTTP router
+return function(httpServer, sck, headers)
     if headers.url=='/' then
         httpServer.sendHeader(sck, dofile("http_headers.lc")[200])
         local help = dofile("http_responses.lc")
         help.returnHeader(sck)
         help.returnState(sck)
+        help.returnFooter(sck)
+        help = nil
+    elseif headers.url=='/statte_full' then
+        httpServer.sendHeader(sck, dofile("http_headers.lc")[200])
+        local help = dofile("http_responses.lc")
+        help.returnHeader(sck)
+        if battery ~= nil then        
+            help.processFile(sck, "state_full.html")
+        else        
+            sck:send("No battery state")
+        end
         help.returnFooter(sck)
         help = nil
     elseif headers.url=='/battery-stop-pull' then
@@ -50,5 +61,3 @@ local function httpCallback(httpServer, sck, headers)
         httpServer.sendHeader(sck, dofile("http_headers.lc")[404])
     end
 end
-
-return dofile("http_server_core.lc")(httpCallback)

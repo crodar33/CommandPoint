@@ -1,5 +1,5 @@
 -- light http server implementation
-return function(httpCallback)
+return function()
     local httpServer
     if httpServer then httpServer.socket:close() end
     httpServer = {}
@@ -10,10 +10,9 @@ return function(httpCallback)
     httpServer.socket:listen(80, function(socket) 
     
         local connectionHandler = nil
-        local finished = false
+        httpMuted = httpMuted + 1
 
         local function onReceive(connection, data) 
-            httpMuted = httpMuted + 1
             connectionHandler = coroutine.create(function(connection, data) 
                 local headers = dofile("http_server_header_parser.lc")(data)
                 if (headers==nil) then
@@ -21,6 +20,7 @@ return function(httpCallback)
                     return false
                 end
                 print("+R", connectionHandler, headers.method, headers.url, headers.version, node.heap())
+                local httpCallback = dofile("http_server_router.lc")
                 if not (httpCallback == nil) then
                     httpCallback(httpServer, connection, headers)
                     print("done")
@@ -45,11 +45,15 @@ return function(httpCallback)
         local function onSent(connection, data) 
             collectgarbage()
             local connectionHandlerStatus = coroutine.status(connectionHandler)
+
             if "suspended" == connectionHandlerStatus then
-                local status, err = coroutine.resume(connectionHandler, connection, data)
+                local status, err = coroutine.resume(connectionHandler)
                 --print("status", connectionHandler, statis, err, connectionHandlerStatus, node.heap())
-                if err ~= nil then 
+                if status==false then 
                     print("handler have broken", connectionHandler, node.heap(), err)
+                end
+                if err then 
+                    --error or ok, but connection will be closed
                     connection:close()
                     connectionHandler = nil
                     collectgarbage()
@@ -67,9 +71,13 @@ return function(httpCallback)
         local function onDisconnect(connection, data) 
             connectionHandler = nil
             collectgarbage()
+            if httpMuted > 0 then
+                httpMuted = httpMuted - 1
+            end
             print("onDisconnect", node.heap())
         end
 
+        socket:on("connection", onConnection)
         socket:on("receive", onReceive)
         socket:on("sent", onSent)
         socket:on("disconnection", onDisconnect)

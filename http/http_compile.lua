@@ -17,7 +17,7 @@ local serverFiles = {
    'http_responses.lua',
    'http_server_core.lua',
    'http_server_header_parser.lua',
-   'http_server_instance.lua',
+   'http_server_router.lua',
 }
 
 for i, f in ipairs(serverFiles) do 

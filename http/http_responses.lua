@@ -60,6 +60,8 @@ end
 
 local M
 M = {}
+M.processFile = processFile
+
 M.returnHeader = function(sck)
     processFile(sck, "header.html")
 end

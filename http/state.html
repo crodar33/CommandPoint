@@ -1,57 +1,19 @@
+Up time: <?= tmr.time() ?>S<br/>
 Battery state:<br/>
 <div class='registers'>
-
     <div>
         Device alarm info: <?= bbVal(0, "<H") ?><br/>
         Operational warning info: <?= bbVal(1, "<H") ?><br/>
-        Status: <?= bbVal(2, "<H") ?> <br/>
-        Total Voltage: <?= bbVal(3, "<h", 100) ?>U<br/>
+        Status: <!-- < ? = bbVal(2, "<H") ?> --> 
+            <?= battery.remoteState.registers[3]==0 and "standby" or "" ?>
+            <?= battery.remoteState.registers[3]==1 and "discharge" or "" ?>
+            <?= battery.remoteState.registers[3]==2 and "charge" or "" ?>
+        <br/>
+        Voltage: <?= bbVal(3, "<h", 100) ?>U<br/>
         Current: <?= bbVal(4, "<h", 10) ?>A<br/>
         SOC: <?= bbVal(5, "<h") ?><br/>
         SOH: <?= bbVal(6, "<h") ?><br/>
         Cycle Numbers: <?= bbVal(7, "<h") ?><br/>
-        Battery Numbers: <?= bbVal(8, "<h") ?><br/>
-        Overvoltage status for battery 1~8: <?= bbVal(29, "<H") ?><br/>
-        Overvoltage status for battery 9~16: <?= bbVal(30, "<H") ?><br/>
-        Undervoltage status for battery 9~16: <?= bbVal(31, "<H") ?><br/>
-        Undervoltage status for battery 1~8: <?= bbVal(32, "<H") ?><br/>
-    </div>
-    <div>
-        <ul>
-            <li>Cell 1 V.: <?= bbVal(9, "<h", 1000) ?>U</li>
-            <li>Cell 2 V.: <?= bbVal(10, "<h", 1000) ?>U</li>
-            <li>Cell 3 V.: <?= bbVal(11, "<h", 1000) ?>U</li>
-            <li>Cell 4 V.: <?= bbVal(12, "<h", 1000) ?>U</li>
-            <li>Cell 5 V.: <?= bbVal(13, "<h", 1000) ?>U</li>
-            <li>Cell 6 V.: <?= bbVal(14, "<h", 1000) ?>U</li>
-            <li>Cell 7 V.: <?= bbVal(15, "<h", 1000) ?>U</li>
-            <li>Cell 8 V.: <?= bbVal(16, "<h", 1000) ?>U</li>
-            <li>Cell 9 V.: <?= bbVal(17, "<h", 1000) ?>U</li>
-            <li>Cell 10 V.: <?= bbVal(18, "<h", 1000) ?>U</li>
-            <li>Cell 11 V.: <?= bbVal(19, "<h", 1000) ?>U</li>
-            <li>Cell 12 V.: <?= bbVal(20, "<h", 1000) ?>U</li>
-            <li>Cell 13 V.: <?= bbVal(21, "<h", 1000) ?>U</li>
-            <li>Cell 14 V.: <?= bbVal(22, "<h", 1000) ?>U</li>
-            <li>Cell 15 V.: <?= bbVal(23, "<h", 1000) ?>U</li>
-            <li>Cell 16 V.: <?= bbVal(24, "<h", 1000) ?>U</li>
-        </ul><ul>
-            <li>Temperature 1: <?= bbVal(25, "<h", 10) ?></li>
-            <li>Temperature 2: <?= bbVal(26, "<h", 10) ?></li>
-            <li>Temperature 3: <?= bbVal(27, "<h", 10) ?></li>
-            <li>Temperature 4: <?= bbVal(28, "<h", 10) ?></li>
-        </ul>
-    </div>
-    <div>
-        Device ID: <?= bbVal(5000, "<H") ?> : <?= bbVal(5001, "<H") ?> : <?= bbVal(5002, "<H") ?> : <?= bbVal(5003, "<H") ?><br/>
-        Nominal Voltage: <?= bbVal(5004, "<H", 100) ?>U<br/>
-        Nominal Current: <?= bbVal(5005, "<H", 10) ?>A<br/>
-        Rated Capacity: <?= bbVal(5006, "<H", 10) ?>AH<br/>
-        Function Support: <?= bbVal(5007, "<H") ?><br/>
-        Single battery nominal voltage: <?= bbVal(5008, "<H", 1000) ?>U<br/>
-        Single battery nominal capacity: <?= bbVal(5009, "<H", 10) ?>AH<br/>
-        Number of batteries in parallel: <?= bbVal(5010, "<H") ?><br/>
-        Number of batteries in series: <?= bbVal(5011, "<H") ?><br/>
-        485 address: <?= bbVal(5012, "<H") ?><br/>
     </div>
     <div>
         Mode:
@@ -67,6 +29,7 @@ Battery state:<br/>
                 <option value="2">Don't use</option>
             </select>
             Interval <input value="10" name="time"> minutes
+            <br>
             <button type="submit">Update</button>
         </form>
     </div>

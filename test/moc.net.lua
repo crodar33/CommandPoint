@@ -20,6 +20,7 @@ net.createServer = function(protocol, port)
 
     socket.send = function(msg)
         print(msg)
+        socket.eventCallback['sent']()
     end
 
     net.mocSockets[#net.mocSockets + 1] = socket

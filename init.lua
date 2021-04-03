@@ -80,7 +80,7 @@ timer2:start()
 canStates = 1
 inverterCmdMod = 0
 inverterModTimer = 0
-dofile("http_server_instance.lc")
+httpServer = dofile("http_server_core.lc")()
 dofile("can_a1_test_init4.lua")
 local timer3 = tmr.create()
 timer3:register(600, tmr.ALARM_AUTO, function() if httpMuted==0 then dofile("can_a3_inform_invertor.lua") end end)
