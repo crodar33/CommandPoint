@@ -5,6 +5,7 @@ Battery state:<br/>
         Device alarm info: <?= bbVal(0, "<H") ?><br/>
         Operational warning info: <?= bbVal(1, "<H") ?><br/>
         Status: <!-- < ? = bbVal(2, "<H") ?> --> 
+            <?= battery.remoteState.registers[3] ?>
             <?= battery.remoteState.registers[3]==0 and "standby" or "" ?>
             <?= battery.remoteState.registers[3]==1 and "discharge" or "" ?>
             <?= battery.remoteState.registers[3]==2 and "charge" or "" ?>
