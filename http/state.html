@@ -4,16 +4,16 @@ Battery state:<br/>
     <div>
         Device alarm info: <?= bbVal(0, "<H") ?><br/>
         Operational warning info: <?= bbVal(1, "<H") ?><br/>
-        Status: <!-- < ? = bbVal(2, "<H") ?> --> 
-            <?= battery.remoteState.registers[3] ?>
-            <?= battery.remoteState.registers[3]==0 and "standby" or "" ?>
-            <?= battery.remoteState.registers[3]==1 and "discharge" or "" ?>
-            <?= battery.remoteState.registers[3]==2 and "charge" or "" ?>
+        Status:
+            <?= bbVal(2, "<H")==0 and "standby" or "" ?>
+            <?= bbVal(2, "<H")==1 and "discharge" or "" ?>
+            <?= bbVal(2, "<H")==2 and "charge" or "" ?>
         <br/>
         Voltage: <?= bbVal(3, "<h", 100) ?>U<br/>
         Current: <?= bbVal(4, "<h", 10) ?>A<br/>
         SOC: <?= bbVal(5, "<h") ?><br/>
         SOH: <?= bbVal(6, "<h") ?><br/>
+        Temperature: <?= batTemp/10 ?><br/>
         Cycle Numbers: <?= bbVal(7, "<h") ?><br/>
     </div>
     <div>
@@ -21,6 +21,7 @@ Battery state:<br/>
         <?= inverterCmdMod==0 and "normal" or "" ?>
         <?= inverterCmdMod==1 and "force change" or "" ?>
         <?= inverterCmdMod==2 and "don't use" or "" ?>
+        <?= inverterCmdMod==3 and "Turbo chagrge" or "" ?>
         <?= inverterCmdMod~=0 and (inverterModTimer - tmr.time()) or "" ?>
         <form action="/better-inverter-state" method="post">
             Change state
@@ -28,6 +29,7 @@ Battery state:<br/>
                 <option value="0">Normal</option>
                 <option value="1">Force charge</option>
                 <option value="2">Don't use</option>
+                <option value="3">Turbo chagrge</option>
             </select>
             Interval <input value="10" name="time"> minutes
             <br>

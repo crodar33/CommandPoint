@@ -80,6 +80,7 @@ timer2:start()
 canStates = 1
 inverterCmdMod = 0
 inverterModTimer = 0
+batTemp = 0
 httpServer = dofile("http_server_core.lc")()
 dofile("can_a1_test_init4.lua")
 local timer3 = tmr.create()

@@ -59,6 +59,7 @@ Battery state:<br/>
         <?= inverterCmdMod==0 and "normal" or "" ?>
         <?= inverterCmdMod==1 and "force change" or "" ?>
         <?= inverterCmdMod==2 and "don't use" or "" ?>
+        <?= inverterCmdMod==3 and "Turbo chagrge" or "" ?>
         <?= inverterCmdMod~=0 and (inverterModTimer - tmr.time()) or "" ?>
         <form action="/better-inverter-state" method="post">
             Change state
@@ -66,6 +67,7 @@ Battery state:<br/>
                 <option value="0">Normal</option>
                 <option value="1">Force charge</option>
                 <option value="2">Don't use</option>
+                <option value="3">Turbo chagrge</option>
             </select>
             Interval <input value="10" name="time"> minutes
             <button type="submit">Update</button>

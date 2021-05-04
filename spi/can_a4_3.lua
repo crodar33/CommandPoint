@@ -5,7 +5,6 @@ local batC = struct.unpack("<h", struct.pack("H", battery.remoteState.registers[
 
 --batA = 10
 --batC = 100
-print(batV, batA, batC)
 sendStatus, sendFlag = dofile("can_sendCanMessage.lc")(0x0356, {
     struct.pack("<h", batV), --batt V
     struct.pack("<h", batA), --batt A

@@ -31,6 +31,13 @@ elseif (batTemp > 400 and chargeA > 10) then
     chargeA = 10
 end
 
+if (inverterCmdMod==3 and batTemp < 700) then
+    chargeA = 500
+    SOC = 90
+elseif (inverterCmdMod==3 and batTemp >= 700) then
+    inverterCmdMod = 0
+end
+
 --print(batTemp, chargeA)
 sendStatus, sendFlag, msg = dofile("can_sendCanMessage.lc")(0x0351, {
     struct.pack("<H", chargeV), 
