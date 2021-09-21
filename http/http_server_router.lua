@@ -24,11 +24,6 @@ return function(httpServer, sck, headers)
     elseif headers.url=='/battery-start-pull' then
         battery:startPullData()
         httpServer.sendHeader(sck, dofile("http_headers.lc")[301])
-    elseif headers.url=='/update_battery' then
-        if battery ~= nil then
-          battery:readStaticData()        
-        end              
-        httpServer.sendHeader(sck, dofile("http_headers.lc")[301])
     elseif headers.url=='/state' then
         httpServer.sendHeader(sck, dofile("http_headers.lc")[200])
         local help = dofile("http_responses.lc")

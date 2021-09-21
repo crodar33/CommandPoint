@@ -19,6 +19,7 @@ return function()
     battery.mos_charging = 0
     battery.mos_discharge = 0
     battery.life = 0
+    battery.base_capacity = 100000
     battery.resiual_capacity = 0
     battery.temp = {}
     battery.cellVoltage = {}
@@ -28,7 +29,7 @@ return function()
 
     local timer = tmr.create()
     local readStep = 0
-    battery.startPullData = function(self)
+    battery.callback = function(self)
         if readStep==0 then
             dofile("daly_read_information.lc")(battery, sUart, RW_pin)
         elseif readStep==1 then
@@ -43,8 +44,11 @@ return function()
         end
         readStep = readStep + 1
     end
-    timer:register(1500, tmr.ALARM_AUTO, battery.startPullData)
-    timer:start()
+    timer:register(1500, tmr.ALARM_AUTO, battery.callback)
+
+    battery.startPullData = function(self) 
+        timer:start()
+    end
 
     battery.stopPullData = function(self) 
         timer:stop()

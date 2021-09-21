@@ -7,6 +7,7 @@ return function(battery, sUart, RW_pin)
         battery.mos_discharge = struct.unpack("b", data, 5+2)
         battery.life = struct.unpack("b", data, 5+3)
         battery.resiual_capacity = struct.unpack(">L", data, 5+4)
+        battery.SOH = math.ceil(battery.resiual_capacity / battery.base_capacity * 100)
     end
   
     --request new data

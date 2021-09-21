@@ -1,58 +1,48 @@
 Up time: <?= tmr.time() ?>S<br/>
 Battery state:<br/>
 <div class='registers'>
-
     <div>
-        Device alarm info: <?= bbVal(0, "<H") ?><br/>
-        Operational warning info: <?= bbVal(1, "<H") ?><br/>
-        Status: <?= bbVal(2, "<H") ?> <br/>
-        Total Voltage: <?= bbVal(3, "<h", 100) ?>U<br/>
-        Current: <?= bbVal(4, "<h", 10) ?>A<br/>
-        SOC: <?= bbVal(5, "<h") ?><br/>
-        SOH: <?= bbVal(6, "<h") ?><br/>
-        Cycle Numbers: <?= bbVal(7, "<h") ?><br/>
-        Battery Numbers: <?= bbVal(8, "<h") ?><br/>
-        Overvoltage status for battery 1~8: <?= bbVal(29, "<H") ?><br/>
-        Overvoltage status for battery 9~16: <?= bbVal(30, "<H") ?><br/>
-        Undervoltage status for battery 9~16: <?= bbVal(31, "<H") ?><br/>
-        Undervoltage status for battery 1~8: <?= bbVal(32, "<H") ?><br/>
+        Status:
+            <?= battery.state==0 and "standby" or "" ?>
+            <?= battery.state==1 and "charge" or "" ?>
+            <?= battery.state==2 and "discharge" or "" ?>
+        <br/>
+        Voltage: <?= battery.voltage ?>U<br/>
+        Current: <?= battery.current ?>A<br/>
+        SOC: <?= battery.SOC ?><br/>
+        SOH: <?= battery.SOH ?><br/>
+        Temperature: <?= battery.temp[1] ?><br/>
+        Cycle Numbers: <?= battery.cicles ?><br/>
     </div>
     <div>
         <ul>
-            <li>Cell 1 V.: <?= bbVal(9, "<h", 1000) ?>U</li>
-            <li>Cell 2 V.: <?= bbVal(10, "<h", 1000) ?>U</li>
-            <li>Cell 3 V.: <?= bbVal(11, "<h", 1000) ?>U</li>
-            <li>Cell 4 V.: <?= bbVal(12, "<h", 1000) ?>U</li>
-            <li>Cell 5 V.: <?= bbVal(13, "<h", 1000) ?>U</li>
-            <li>Cell 6 V.: <?= bbVal(14, "<h", 1000) ?>U</li>
-            <li>Cell 7 V.: <?= bbVal(15, "<h", 1000) ?>U</li>
-            <li>Cell 8 V.: <?= bbVal(16, "<h", 1000) ?>U</li>
-            <li>Cell 9 V.: <?= bbVal(17, "<h", 1000) ?>U</li>
-            <li>Cell 10 V.: <?= bbVal(18, "<h", 1000) ?>U</li>
-            <li>Cell 11 V.: <?= bbVal(19, "<h", 1000) ?>U</li>
-            <li>Cell 12 V.: <?= bbVal(20, "<h", 1000) ?>U</li>
-            <li>Cell 13 V.: <?= bbVal(21, "<h", 1000) ?>U</li>
-            <li>Cell 14 V.: <?= bbVal(22, "<h", 1000) ?>U</li>
-            <li>Cell 15 V.: <?= bbVal(23, "<h", 1000) ?>U</li>
-            <li>Cell 16 V.: <?= bbVal(24, "<h", 1000) ?>U</li>
-        </ul><ul>
-            <li>Temperature 1: <?= bbVal(25, "<h", 10) ?></li>
-            <li>Temperature 2: <?= bbVal(26, "<h", 10) ?></li>
-            <li>Temperature 3: <?= bbVal(27, "<h", 10) ?></li>
-            <li>Temperature 4: <?= bbVal(28, "<h", 10) ?></li>
+            <li>Cell 1 V.:<?= battery.cellVoltage[0] ?>U</li>
+            <li>Cell 2 V.:<?= battery.cellVoltage[1] ?>U</li>
+            <li>Cell 3 V.:<?= battery.cellVoltage[2] ?>U</li>
+            <li>Cell 4 V.:<?= battery.cellVoltage[3] ?>U</li>
+            <li>Cell 5 V.:<?= battery.cellVoltage[4] ?>U</li>
+            <li>Cell 6 V.:<?= battery.cellVoltage[5] ?>U</li>
+            <li>Cell 7 V.:<?= battery.cellVoltage[6] ?>U</li>
+            <li>Cell 8 V.:<?= battery.cellVoltage[7] ?>U</li>
+            <li>Cell 9 V.:<?= battery.cellVoltage[8] ?>U</li>
+            <li>Cell 10 V.:<?= battery.cellVoltage[9] ?>U</li>
+            <li>Cell 11 V.:<?= battery.cellVoltage[10] ?>U</li>
+            <li>Cell 12 V.:<?= battery.cellVoltage[11] ?>U</li>
+            <li>Cell 13 V.:<?= battery.cellVoltage[12] ?>U</li>
+            <li>Cell 14 V.:<?= battery.cellVoltage[13] ?>U</li>
+            <li>Cell 15 V.:<?= battery.cellVoltage[14] ?>U</li>
+            <li>Cell 16 V.:<?= battery.cellVoltage[15] ?>U</li>
+            <li>Cell 17 V.:<?= battery.cellVoltage[16] ?>U</li>
+            <li>Cell 18 V.:<?= battery.cellVoltage[17] ?>U</li>
         </ul>
     </div>
     <div>
-        Device ID: <?= bbVal(5000, "<H") ?> : <?= bbVal(5001, "<H") ?> : <?= bbVal(5002, "<H") ?> : <?= bbVal(5003, "<H") ?><br/>
-        Nominal Voltage: <?= bbVal(5004, "<H", 100) ?>U<br/>
-        Nominal Current: <?= bbVal(5005, "<H", 10) ?>A<br/>
-        Rated Capacity: <?= bbVal(5006, "<H", 10) ?>AH<br/>
-        Function Support: <?= bbVal(5007, "<H") ?><br/>
-        Single battery nominal voltage: <?= bbVal(5008, "<H", 1000) ?>U<br/>
-        Single battery nominal capacity: <?= bbVal(5009, "<H", 10) ?>AH<br/>
-        Number of batteries in parallel: <?= bbVal(5010, "<H") ?><br/>
-        Number of batteries in series: <?= bbVal(5011, "<H") ?><br/>
-        485 address: <?= bbVal(5012, "<H") ?><br/>
+        mos_charging <?= battery.mos_charging ?><br/>
+        mos_discharge <?= battery.mos_discharge?><br/>
+        life <?= battery.life ?><br/>
+        resiual_capacity <?= battery.resiual_capacity ?><br/>
+        string <?= battery.string ?><br/>
+        temp2 <?= battery.temp2 ?><br/>
     </div>
     <div>
         Mode:

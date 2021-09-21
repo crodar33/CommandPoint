@@ -14,23 +14,29 @@ end
 
 
 local function getNextLine(file) 
-    local buf, s1, s2, sub, p1, p2
+    local buf, s1, s2, subf, p1, p2, t
     buf = file.read('\n')
     if (buf == nill) then 
         return nill 
     end
     --for s1, s2 in buf:gmatch("([<][?][=](.+)[?][>])") do
     for s1, s2 in buf:gmatch("(<%?=([^?>]+)%?>)") do
-        sub = loadstring("return " .. s2)
-        if not (sub == nil) then       
+        subf = loadstring("return " .. s2)
+        if not (subf == nil) then       
             p1, p2 = buf:find(s1, 0, 1)
-            buf = buf:sub(0, p1 - 1) .. sub() .. buf:sub(p2 + 1, #buf)
-            --buf = buf:gsub(s1, sub())
+            t = subf()
+            if t == nill then
+                buf = buf:sub(0, p1 - 1) .. "-" .. buf:sub(p2 + 1, #buf)
+            else
+                buf = buf:sub(0, p1 - 1) .. t .. buf:sub(p2 + 1, #buf)
+            end
+            --buf = buf:gsub(s1, subf())
         end
     end
-    sub = nil
+    subf = nil
     s1 = nil
     s2 = nil
+    t = nil
     return buf
 end
 
