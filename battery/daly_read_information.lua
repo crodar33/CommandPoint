@@ -1,6 +1,7 @@
 return function(battery, sUart, RW_pin)
 
     local callback = function(data)
+        battery.last_update = tmr.time()
         print("Response: ", dataToString(data)) 
         battery.string = struct.unpack("b", data, 5+0)
         battery.temp2 = struct.unpack("b", data, 5+1)

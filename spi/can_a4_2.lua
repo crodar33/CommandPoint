@@ -1,6 +1,6 @@
 --Frame 2 SOC, SOH
-local SOC = struct.unpack("<h", struct.pack("H", battery.remoteState.registers[6]))
-local SOH = struct.unpack("<h", struct.pack("H", battery.remoteState.registers[7]))
+local SOC = struct.unpack("<h", struct.pack("H", battery.SOC))
+local SOH = struct.unpack("<h", struct.pack("H", battery.SOH))
 if inverterCmdMod==3 then
     chargeA = 50
     SOC = 90

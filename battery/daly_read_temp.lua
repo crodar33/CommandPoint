@@ -1,6 +1,7 @@
 return function(battery, sUart, RW_pin)
     
     local callback = function(data)
+        battery.last_update = tmr.time()
         print("Response: ", dataToString(data)) 
         local frameIndex = (struct.unpack("b", data, 5) - 1) * 7
         for i=0, 7 do

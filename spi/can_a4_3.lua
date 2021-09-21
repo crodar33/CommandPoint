@@ -1,7 +1,7 @@
 --frame 3, Battery voltage, Battery current, Battery Temperature, Cycles
-local batV = struct.unpack("<h", struct.pack("H", battery.remoteState.registers[4]))
-local batA = struct.unpack("<h", struct.pack("H", battery.remoteState.registers[5]))
-local batC = struct.unpack("<h", struct.pack("H", battery.remoteState.registers[8]))
+local batV = struct.unpack("<h", struct.pack("H", battery.voltage * 10))
+local batA = struct.unpack("<h", struct.pack("H", battery.current * 10))
+local batC = struct.unpack("<h", struct.pack("H", battery.cicles))
 
 --batA = 10
 --batC = 100

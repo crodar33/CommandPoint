@@ -26,6 +26,7 @@ return function()
     battery.string = 0
     battery.temp2 = 0
     battery.cicles = 0
+    battery.last_update = 0
 
     local timer = tmr.create()
     local readStep = 0

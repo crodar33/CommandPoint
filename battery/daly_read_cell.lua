@@ -2,6 +2,7 @@ return function(battery, sUart, RW_pin)
     
     local callback = function(data)
         print("Response: ", dataToString(data)) 
+        battery.last_update = tmr.time()
         local frameIndex = (struct.unpack("b", data, 5) - 1) * 3
         for i=0, 2 do
             battery.cellVoltage[frameIndex] = struct.unpack(">H", data, 6+i*2) / 100

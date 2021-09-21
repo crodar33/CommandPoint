@@ -1,14 +1,9 @@
-if battery==nil or battery.remoteState.lastUpdate==0 or (tmr.time() - battery.remoteState.lastUpdate)>10 then
+if battery==nil or battery.last_update==0 or (tmr.time() - battery.last_update)>10 or #battery.temp==0 then
     print("No battery state")
     return
 end
-for i, j in pairs(battery.remoteState.registers) do
-    if j == '-' then
-        --battery not initiated
-        return
-    end
-end
-print("Can send messages")
+
+print("CAN send messages")
 
 if canStates > 7 then
     canStates = 1

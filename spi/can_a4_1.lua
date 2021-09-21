@@ -1,21 +1,18 @@
 --Frame 1 battery charge voltage, DC charge current limitation, DC discharge current limitation, Battery discharge voltage
 local chargeV = 568
-local chargeA = 500
+local chargeA = 400
 local dischargeA = 500
 local cutFoffVoltage = 490
-local SOC = struct.unpack("<h", struct.pack("H", battery.remoteState.registers[6]))
-local SOH = struct.unpack("<h", struct.pack("H", battery.remoteState.registers[7]))
+local SOC = struct.unpack("<h", struct.pack("H", battery.SOC))
+local SOH = struct.unpack("<h", struct.pack("H", battery.SOH))
 
-batTemp = math.max(
-    struct.unpack("<h", struct.pack("H", battery.remoteState.registers[26])),
-    struct.unpack("<h", struct.pack("H", battery.remoteState.registers[27])),
-    struct.unpack("<h", struct.pack("H", battery.remoteState.registers[28])),
-    struct.unpack("<h", struct.pack("H", battery.remoteState.registers[29]))
-)
+
+batTemp = struct.unpack("<h", struct.pack("H", battery.temp[1]))
+
 if SOC == 100 then
     chargeA = 0
 elseif SOC>80 then
-    chargeA = 50
+    chargeA = 45
 elseif SOC <= 20 then
     dischargeA = 0
 end

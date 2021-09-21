@@ -4,6 +4,16 @@ print("===========================================")
 wifi.setmode(wifi.STATION)
 local station_cfg= require("wifi_config")
 wifi.sta.config(station_cfg)
+
+function dataToString(data)
+    local result = ''
+    for i=1, #data do
+        local val = struct.unpack(">B", data, i)
+        result = result .. " 0X" .. string.format("%02X", val)
+    end
+    return result
+end
+
 --[[
 ntpTime = 0
 local wifiGotIpEvent = function(T)
@@ -67,11 +77,7 @@ wifi.eventmon.register(wifi.eventmon.STA_DISCONNECTED, wifiDisconnectEvent)
 
 httpMuted = 0
 battery = dofile("battery.lc")()
-battery:readStaticData()
---periodically update static data
-local timer1 = tmr.create()
-timer1:register(20500, tmr.ALARM_AUTO, function() if httpMuted==0 then print("started pull of static data") battery:readStaticData() end end)
-timer1:start()
+battery:startPullData();
 --pull battery state
 local timer2 = tmr.create()
 timer2:register(2000, tmr.ALARM_SINGLE, function() if httpMuted==0 then print("started pull battery data") battery:startPullData() end end)
