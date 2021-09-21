@@ -1,3 +1,4 @@
 (sym_lib_table
-  (lib (name Converter_DCDC)(type Legacy)(uri ${KIPRJMOD}/Converter_DCDC.lib)(options "")(descr ""))
+  (lib (name Converter_DCDC)(type Legacy)(uri ${KIPRJMOD}/lib/Converter_DCDC/Converter_DCDC.lib)(options "")(descr ""))
+  (lib (name TM1637)(type Legacy)(uri ${KIPRJMOD}/lib/TM1637/TM1637.lib)(options "")(descr ""))
 )

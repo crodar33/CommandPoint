@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP TM1637
+D LED Drive Control Special Circuit
+K
+F http://www.titanmec.com/index.php/en/project/download/id/302.html
+$ENDCMP
+#
+#End Doc Library
