@@ -1138,17 +1138,11 @@ NoConn ~ 8300 5800
 Wire Wire Line
 	4400 4800 4400 5450
 Wire Wire Line
-	4400 5450 6600 5450
-Wire Wire Line
-	6600 5450 6600 6150
-Wire Wire Line
 	6600 6150 8500 6150
 Wire Wire Line
 	8500 6150 8500 5200
 Wire Wire Line
 	8500 5200 8300 5200
-Wire Wire Line
-	6500 5650 6500 6250
 Wire Wire Line
 	6500 6250 8600 6250
 Wire Wire Line
@@ -1159,8 +1153,6 @@ Wire Wire Line
 	3200 4700 3050 4700
 Wire Wire Line
 	3050 4700 3050 5650
-Wire Wire Line
-	3050 5650 6500 5650
 $Comp
 L power:GND #PWR?
 U 1 1 613C30D3
@@ -1202,6 +1194,14 @@ Wire Wire Line
 	8300 5300 8800 5300
 Wire Wire Line
 	8800 5300 8800 5200
+Wire Wire Line
+	4400 5450 6500 5450
+Wire Wire Line
+	6500 5450 6500 6250
+Wire Wire Line
+	3050 5650 6600 5650
+Wire Wire Line
+	6600 5650 6600 6150
 Wire Bus Line
 	4700 3550 4700 4200
 Wire Bus Line

@@ -2,7 +2,7 @@ return function(battery, sUart, RW_pin)
 
     local callback = function(data)
         battery.last_update = tmr.time()
-        print("Response: ", dataToString(data)) 
+        --print("Response: ", dataToString(data)) 
         local u1 = struct.unpack(">H", data, 5+0) / 10
         local u2 = struct.unpack(">H", data, 5+2) / 10
         local curr = struct.unpack(">H", data, 5+4) / 10
@@ -23,7 +23,7 @@ return function(battery, sUart, RW_pin)
     --request new data
     local sendData = struct.pack(">BBBBBBBBBBBBB", 0xA5, 0x40, 0x90, 0x08, 0, 0, 0, 0, 0, 0, 0, 0, 0x7D)    
     --set callback on what we waiting
-    print("Requested: ", dataToString(sendData))
+    --print("Requested: ", dataToString(sendData))
     sUart:on("data", 13, callback)
     --send data
     gpio.write(RW_pin, gpio.HIGH)

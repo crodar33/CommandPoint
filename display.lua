@@ -1,19 +1,22 @@
 digsMap = {}
 digsMap["nil"] = 0x00
 digsMap[0] = 0xFC
-digsMap[1] = 0x60
+digsMap[1] = 0x0C
 digsMap[2] = 0xDA
-digsMap[3] = 0xF2
-digsMap[4] = 0x66
+digsMap[3] = 0x9E
+digsMap[4] = 0x2E
 digsMap[5] = 0xB6
-digsMap[6] = 0xBE
-digsMap[7] = 0xE0
+digsMap[6] = 0xF6
+digsMap[7] = 0x1C
 digsMap[8] = 0xFE
-digsMap[9] = 0xF6
-digsMap["-"] = 0x40
+digsMap[9] = 0xBE
+digsMap["-"] = 0x02
 digsMap["H"] = 0x6E
+digsMap["U"] = 0xEC
+digsMap["A"] = 0x7E
+digsMap["C"] = 0xF0
 
-i2c.setup(0, 0, 12, i2c.SLOW)
+i2c.setup(0, 12, 0, i2c.SLOW)
 
 i2c.start(0)
 i2c.write(0, 0x02)
@@ -25,29 +28,26 @@ i2c.start(0)
 i2c.write(0, 0x51)
 i2c.stop(0)
 
-showTemp = true
-
-function updateValue() 
-    status, temp, humi = dht.read11(2)
-    if status ~= dht.OK then
-        print("dht error " .. status)
-        return
-    end
-    if showTemp then
-        print("show temp " .. temp)
-        showValue = temp*10
-        d4 = 'nil'
+local step = 0
+local timer = tmr.create()
+timer:register(3000, tmr.ALARM_AUTO, function() 
+    step = step + 1
+    local d1, d2, d3, d4, tmp
+    if step == 0 then
+        tmp = math.floor(battery.voltage * 10)
+        d4 = "U"
+    elseif step == 1 then
+        tmp = math.floor(battery.SOC * 10)
+        d4 = "C"
     else
-        print("humi " .. humi)
-        showValue = humi
-        d4 = 'H'
+        tmp = math.floor(battery.current * 10)
+        d4 = "A"
+        step = -1
     end
 
-
-    
-    d3 = math.floor(showValue/100)%10
-    d2 = math.floor(showValue/10)%10
-    d1 = showValue%10
+    d1 = math.floor(tmp/100) % 10
+    d2 = math.floor(tmp/10) % 10
+    d3 = tmp % 10
 
     i2c.start(0)
     i2c.write(0, 0x03, 
@@ -57,10 +57,5 @@ function updateValue()
         digsMap[d1]
     )
     i2c.stop(0)
-
-    showTemp = not showTemp 
-end
-
---local mytimer = tmr.create()
---mytimer:register(1000, tmr.ALARM_AUTO, updateValue)
---mytimer:start()
+end)
+timer:start()
