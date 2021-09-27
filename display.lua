@@ -45,6 +45,7 @@ timer:register(3000, tmr.ALARM_AUTO, function()
         step = -1
     end
 
+    tmp = math.abs(tmp)
     d1 = math.floor(tmp/100) % 10
     d2 = math.floor(tmp/10) % 10
     d3 = tmp % 10
