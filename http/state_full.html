@@ -7,7 +7,8 @@ Battery state:<br/>
             <?= battery.state==1 and "charge" or "" ?>
             <?= battery.state==2 and "discharge" or "" ?>
         <br/>
-        Voltage: <?= battery.voltage ?>U<br/>
+        Voltage pressure: <?= battery.pressure ?>U<br/>
+        Voltage acquisition: <?= battery.acquisition ?>U<br/>
         Current: <?= battery.current ?>A<br/>
         SOC: <?= battery.SOC ?><br/>
         SOH: <?= battery.SOH ?><br/>
