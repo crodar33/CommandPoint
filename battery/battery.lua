@@ -2,6 +2,15 @@
 -- GPIO2-TX pin 2
 -- GPIO0-RW_flag pin 3
 
+function chechCRC(data) 
+    sum = 0
+    for i=1, 12 do
+        sum = sum + struct.unpack("B", data, i) 
+    end
+    --print(bit.band(sum, 0xFF), struct.unpack("B", data, 13))
+    return bit.band(sum, 0xFF) == struct.unpack("B", data, 13)
+end
+
 return function()
 
     local RW_pin = 3
@@ -13,6 +22,8 @@ return function()
     local battery = {}
     battery.SOC = 0
     battery.SOH = 0
+    battery.pressure = 0
+    battery.acquisition = 0
     battery.voltage = 0
     battery.current = 0
     battery.state = 0

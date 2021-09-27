@@ -1,11 +1,15 @@
 return function(battery, sUart, RW_pin)
     
     local callback = function(data)
-        --print("Response: ", dataToString(data)) 
+        if not chechCRC(data) then
+            print("bad CRC 0x95")
+            print("Response: ", dataToString(data)) 
+            return
+        end
         battery.last_update = tmr.time()
         local frameIndex = (struct.unpack("b", data, 5) - 1) * 3
         for i=0, 2 do
-            battery.cellVoltage[frameIndex] = struct.unpack(">H", data, 6+i*2) / 100
+            battery.cellVoltage[frameIndex] = struct.unpack(">H", data, 6+i*2) / 1000
             --print(frameIndex .. ": " .. battery.cellVoltage[frameIndex] )
             frameIndex = frameIndex + 1
         end

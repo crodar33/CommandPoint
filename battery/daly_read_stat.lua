@@ -1,14 +1,18 @@
 return function(battery, sUart, RW_pin)
 
     local callback = function(data)
+        if not chechCRC(data) then
+            print("bad CRC 0x93")
+            print("Response: ", dataToString(data)) 
+            return
+        end
         battery.last_update = tmr.time()
-        --print("Response: ", dataToString(data)) 
         battery.state = struct.unpack("b", data, 5+0)
         battery.mos_charging = struct.unpack("b", data, 5+1)
         battery.mos_discharge = struct.unpack("b", data, 5+2)
-        battery.life = struct.unpack("b", data, 5+3)
+        battery.life = struct.unpack("B", data, 5+3)
         battery.resiual_capacity = struct.unpack(">L", data, 5+4)
-        battery.SOH = math.ceil(battery.resiual_capacity / battery.base_capacity * 100)
+        battery.SOH = math.ceil(battery.life / 255 * 1000) / 10
     end
   
     --request new data

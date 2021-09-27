@@ -1,18 +1,22 @@
 return function(battery, sUart, RW_pin)
 
     local callback = function(data)
+        if not chechCRC(data) then
+            print("bad CRC 0x90")
+            print("Response: ", dataToString(data)) 
+            return
+        end
         battery.last_update = tmr.time()
-        --print("Response: ", dataToString(data)) 
-        local u1 = struct.unpack(">H", data, 5+0) / 10
-        local u2 = struct.unpack(">H", data, 5+2) / 10
+        battery.pressure = struct.unpack(">H", data, 5+0) / 10
+        battery.acquisition = struct.unpack(">H", data, 5+2) / 10
         local curr = struct.unpack(">H", data, 5+4) / 10
         local soc = struct.unpack(">H", data, 5+6) / 10
-        --print("R: u1 ".. u1 .. ", u2 ".. u2 .. ", curr ".. curr .. ", soc ".. soc )
+        print("R: pressure ".. battery.pressure .. ", acquisition ".. battery.acquisition .. ", curr ".. curr .. ", soc ".. soc )
         battery.SOC = soc
-        if u1>0 then
-            battery.voltage = u1
-        elseif u2>0 then
-            battery.voltage = u2
+        if battery.pressure>0 then
+            battery.voltage = battery.pressure
+        elseif battery.acquisition>0 then
+            battery.voltage = battery.acquisition
         else           
             battery.voltage = 0
         end
