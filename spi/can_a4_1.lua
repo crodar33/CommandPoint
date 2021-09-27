@@ -7,7 +7,7 @@ local SOC = struct.unpack("<h", struct.pack("H", battery.SOC))
 local SOH = struct.unpack("<h", struct.pack("H", battery.SOH))
 
 
-batTemp = struct.unpack("<h", struct.pack("H", battery.temp[1]))
+batTemp = struct.unpack("<h", struct.pack("H", battery.temp[1]*10))
 
 if SOC == 100 then
     chargeA = 0
