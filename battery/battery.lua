@@ -16,7 +16,7 @@ return function()
     local RW_pin = 3
     local RX_pin = 4
     local TX_pin = 2
-    local sUart = softuart.setup(9600, TX_pin, RX_pin)
+    battery.sUart = softuart.setup(9600, TX_pin, RX_pin)
     gpio.mode(RW_pin, gpio.OUTPUT)    
 
     local battery = {}

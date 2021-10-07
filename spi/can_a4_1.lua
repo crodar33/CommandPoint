@@ -12,7 +12,7 @@ batTemp = struct.unpack("<h", struct.pack("H", battery.temp[1]*10))
 if SOC == 100 then
     chargeA = 0
 elseif SOC>80 then
-    chargeA = 45
+    chargeA = 200
 elseif SOC <= 20 then
     dischargeA = 0
 end
@@ -24,8 +24,8 @@ elseif ((batTemp > 500) ) then
 end
 if (batTemp > 450) then
     chargeA = 0
-elseif (batTemp > 400 and chargeA > 10) then
-    chargeA = 10
+elseif (batTemp > 400 and chargeA > 50) then
+    chargeA = 50
 end
 
 if (inverterCmdMod==3 and batTemp < 700) then
