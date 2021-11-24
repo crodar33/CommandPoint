@@ -6,6 +6,9 @@ return function(battery, sUart, RW_pin)
             print("Response: ", dataToString(data)) 
             return
         end
+        if (struct.unpack("B", data, 2)~=battery.address) then
+            return
+        end
         battery.last_update = tmr.time()
         battery.pressure = struct.unpack(">H", data, 5+0) / 10
         battery.acquisition = struct.unpack(">H", data, 5+2) / 10

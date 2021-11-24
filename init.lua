@@ -14,11 +14,12 @@ function dataToString(data)
     return result
 end
  
---[[
 ntpTime = 0
+local modbus_proxy = nil
 local wifiGotIpEvent = function(T)
     print("My IP: " .. T.IP)
     --watch for time
+--[[
     timerNtp = tmr.create()
     timerNtp:register(10000, tmr.ALARM_AUTO, function()
         sntp.sync('192.168.42.1', 
@@ -32,14 +33,20 @@ local wifiGotIpEvent = function(T)
         )
     end)
     timerNtp:start()
-end
 ]]
+    modbus_proxy = dofile("tcp_modbus.lua");
+end
+
 local wifiConnectEvent = function(T)
     print("Connection to AP("..T.SSID..") established!")
     print("Waiting for IP address...")
     if disconnect_ct ~= nil then disconnect_ct = nil end
 end
 wifiDisconnectEvent = function(T)
+    if modbus_proxy ~= nil then
+        modbus_proxy:close()
+        modbus_proxy = nil
+    end
     if T.reason == wifi.eventmon.reason.ASSOC_LEAVE then
         --the station has disassociated from a previously connected AP
         return
@@ -53,7 +60,7 @@ wifiDisconnectEvent = function(T)
     for key,val in pairs(wifi.eventmon.reason) do
         if val == T.reason then
             print("Disconnect reason: "..val.."("..key..")")
-            node.restart() 
+            --node.restart() 
             break
         end
     end
@@ -78,23 +85,41 @@ wifi.eventmon.register(wifi.eventmon.STA_GOT_IP, wifiGotIpEvent)
 wifi.eventmon.register(wifi.eventmon.STA_DISCONNECTED, wifiDisconnectEvent)
 
 httpMuted = 0
-battery = dofile("battery.lc")()
-battery:startPullData();
+
+-- GPIO4-RX pin 4
+-- GPIO2-TX pin 2
+-- GPIO0-RW_flag pin 3
+-- init soft urart
+RW_pin = 3
+RX_pin = 4
+TX_pin = 2
+sUart = softuart.setup(9600, TX_pin, RX_pin)
+gpio.mode(RW_pin, gpio.OUTPUT)
+
+battery = dofile("battery.lc")(1, sUart, RW_pin)
+battery:startPullData()
+--battery:stopPullData()
+inverter = dofile("sofar_hyd6es.lua")(10, sUart, RW_pin)
+inverter:startPullData()
 --pull battery state
-local timer2 = tmr.create()
-timer2:register(2000, tmr.ALARM_SINGLE, function() if httpMuted==0 then print("started pull battery data") battery:startPullData() end end)
-timer2:start()
 --normal Mod
 canStates = 1
 inverterCmdMod = 0
 inverterModTimer = 0
 batTemp = 0
-httpServer = dofile("http_server_core.lc")()
+--httpServer = dofile("http_server_core.lc")()
 dofile("can_a1_test_init4.lua")
+
 local timer3 = tmr.create()
 timer3:register(600, tmr.ALARM_AUTO, function() if httpMuted==0 then dofile("can_a3_inform_invertor.lua") end end)
 timer3:start()
+
 dofile("display.lua")
+
+local timer4 = tmr.create()
+timer4:register(1000, tmr.ALARM_AUTO, function() dofile("broadcast_udp.lua") end)
+timer4:start()
+
 print("===========================================")
 print("STARTED")
 print("===========================================")

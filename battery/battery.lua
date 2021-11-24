@@ -1,8 +1,7 @@
--- GPIO4-RX pin 4
--- GPIO2-TX pin 2
--- GPIO0-RW_flag pin 3
-
 function chechCRC(data) 
+    if (data == nil or #data ~= 13) then
+        return false
+    end
     sum = 0
     for i=1, 12 do
         sum = sum + struct.unpack("B", data, i) 
@@ -11,15 +10,9 @@ function chechCRC(data)
     return bit.band(sum, 0xFF) == struct.unpack("B", data, 13)
 end
 
-return function()
-
-    local RW_pin = 3
-    local RX_pin = 4
-    local TX_pin = 2
-    battery.sUart = softuart.setup(9600, TX_pin, RX_pin)
-    gpio.mode(RW_pin, gpio.OUTPUT)    
-
+return function(address, sUart, RW_pin)
     local battery = {}
+    battery.address = address
     battery.SOC = 0
     battery.SOH = 0
     battery.pressure = 0

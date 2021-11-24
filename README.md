@@ -12,3 +12,6 @@ In current implementation it can:
 
 Used ESP8266, MCP2515, MAX485 and nodeMCU, code writed on LUA
 Build nodemcu with **I2C_MASTER_GPIO16_ENABLE** and without **I2C_MASTER_OLD_VERSION**
+LUA_USE_MODULES_SOFTUART
+LUA_USE_MODULES_STRUCT
+LUA_USE_MODULES_U8G2

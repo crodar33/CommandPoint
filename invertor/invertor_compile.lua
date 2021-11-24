@@ -12,13 +12,11 @@ local compile = function(f)
 end
 
 local serverFiles = {
-   'RS485.lua',
-   'RS485_RegistersCallback.lua',
-   'battery.lua',
-   'crc16_arc_calc.lua'
+   'sofar_hyd6es.lua',
+   'sofar_read_grid.lua',
 }
 
 for i, f in ipairs(serverFiles) do 
     compile(f) 
 end
-file.remove("rs485_compile.lua")
+file.remove("invertor_compile.lua")

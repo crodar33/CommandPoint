@@ -6,6 +6,9 @@ return function(battery, sUart, RW_pin)
             print("Response: ", dataToString(data)) 
             return
         end
+        if (struct.unpack("B", data, 2)~=battery.address) then
+            return
+        end
         battery.last_update = tmr.time()
         local frameIndex = (struct.unpack("b", data, 5) - 1) * 3
         for i=0, 2 do
