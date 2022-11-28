@@ -34,7 +34,7 @@ local wifiGotIpEvent = function(T)
     end)
     timerNtp:start()
 ]]
-    modbus_proxy = dofile("tcp_modbus.lua");
+    --modbus_proxy = dofile("tcp_modbus.lua");
 end
 
 local wifiConnectEvent = function(T)
@@ -99,25 +99,26 @@ gpio.mode(RW_pin, gpio.OUTPUT)
 battery = dofile("battery.lc")(1, sUart, RW_pin)
 battery:startPullData()
 --battery:stopPullData()
-inverter = dofile("sofar_hyd6es.lua")(10, sUart, RW_pin)
-inverter:startPullData()
+--stop inverter pull
+--inverter = dofile("sofar_hyd6es.lua")(10, sUart, RW_pin)
+--inverter:startPullData()
 --pull battery state
 --normal Mod
 canStates = 1
 inverterCmdMod = 0
 inverterModTimer = 0
 batTemp = 0
---httpServer = dofile("http_server_core.lc")()
+httpServer = dofile("http_server_core.lc")()
 dofile("can_a1_test_init4.lua")
 
 local timer3 = tmr.create()
 timer3:register(600, tmr.ALARM_AUTO, function() if httpMuted==0 then dofile("can_a3_inform_invertor.lua") end end)
 timer3:start()
 
-dofile("display.lua")
+dofile("display.lc")
 
 local timer4 = tmr.create()
-timer4:register(1000, tmr.ALARM_AUTO, function() dofile("broadcast_udp.lua") end)
+timer4:register(5000, tmr.ALARM_AUTO, function() dofile("broadcast_udp.lc") end)
 timer4:start()
 
 print("===========================================")

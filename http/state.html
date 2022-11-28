@@ -3,9 +3,9 @@ Battery state:<br/>
 <div class='registers'>
     <div>
         Status:
-            <?= battery.state==0 and "standby" or "" ?>
-            <?= battery.state==1 and "charge" or "" ?>
-            <?= battery.state==2 and "discharge" or "" ?>
+            <?= battery.status==0 and "standby" or "" ?>
+            <?= battery.status==1 and "charge" or "" ?>
+            <?= battery.status==2 and "discharge" or "" ?>
         <br/>
         Voltage: <?= battery.voltage ?>U<br/>
         Current: <?= battery.current ?>A<br/>

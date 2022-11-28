@@ -12,16 +12,11 @@ local compile = function(f)
 end
 
 local serverFiles = {
-   'battery.lua',
-   'daly_read_cell.lua',
-   'daly_read_information.lua',
-   'daly_read_soc.lua',
-   'daly_read_status.lua',
-   'daly_read_temp.lua',
-   'daly_read_state.lua'
+   'broadcast_udp.lua',
+   'display.lua',
 }
 
 for i, f in ipairs(serverFiles) do 
     compile(f) 
 end
-file.remove("battery_compile.lua")
+file.remove("compile.lua")

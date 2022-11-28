@@ -3,9 +3,9 @@ Battery state:<br/>
 <div class='registers'>
     <div>
         Status:
-            <?= battery.state==0 and "standby" or "" ?>
-            <?= battery.state==1 and "charge" or "" ?>
-            <?= battery.state==2 and "discharge" or "" ?>
+            <?= battery.status==0 and "standby" or "" ?>
+            <?= battery.status==1 and "charge" or "" ?>
+            <?= battery.status==2 and "discharge" or "" ?>
         <br/>
         Voltage pressure: <?= battery.pressure ?>U<br/>
         Voltage acquisition: <?= battery.acquisition ?>U<br/>
@@ -14,6 +14,15 @@ Battery state:<br/>
         SOH: <?= battery.SOH ?><br/>
         Temperature: <?= battery.temp[1] ?><br/>
         Cycle Numbers: <?= battery.cicles ?><br/>
+        Errors: B1:<?= battery.state[0] ?>
+         B1:<?= battery.state[1] ?>
+         B2:<?= battery.state[2] ?>
+         B3:<?= battery.state[3] ?>
+         B4:<?= battery.state[4] ?>
+         B5:<?= battery.state[5] ?>
+         B6:<?= battery.state[6] ?>
+         B7:<?= battery.state[7] ?>
+        <br/>
     </div>
     <div>
         <ul>

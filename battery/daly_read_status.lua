@@ -10,7 +10,7 @@ return function(battery, sUart, RW_pin)
             return
         end
         battery.last_update = tmr.time()
-        battery.state = struct.unpack("b", data, 5+0)
+        battery.status = struct.unpack("b", data, 5+0)
         battery.mos_charging = struct.unpack("b", data, 5+1)
         battery.mos_discharge = struct.unpack("b", data, 5+2)
         battery.life = struct.unpack("B", data, 5+3)

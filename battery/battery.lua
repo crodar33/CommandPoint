@@ -19,7 +19,8 @@ return function(address, sUart, RW_pin)
     battery.acquisition = 0
     battery.voltage = 0
     battery.current = 0
-    battery.state = 0
+    battery.status = 0
+    battery.state = {}
     battery.mos_charging = 0
     battery.mos_discharge = 0
     battery.life = 0
@@ -40,11 +41,13 @@ return function(address, sUart, RW_pin)
         elseif readStep==1 then
             dofile("daly_read_soc.lc")(battery, sUart, RW_pin)
         elseif readStep==2 then
-            dofile("daly_read_stat.lc")(battery, sUart, RW_pin)
+            dofile("daly_read_status.lc")(battery, sUart, RW_pin)
         elseif readStep==3 then
             dofile("daly_read_temp.lc")(battery, sUart, RW_pin)
         elseif readStep==4 then
             dofile("daly_read_cell.lc")(battery, sUart, RW_pin)
+        elseif readStep==5 then
+            dofile("daly_read_state.lc")(battery, sUart, RW_pin)
             readStep = - 1
         end
         readStep = readStep + 1

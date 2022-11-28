@@ -1,8 +1,9 @@
 return function(invertor, sUart, RW_pin)
 
     local callback = function(data)
-        if (s == nil or #s < 4) then
-            return false
+        if #data < 4 then
+            print("invertor bad lan " .. #data)
+            return
         end
         local addr = struct.unpack(">B", data, 1)
         local funct = struct.unpack(">B", data, 2)
@@ -10,6 +11,7 @@ return function(invertor, sUart, RW_pin)
         print("Invertor responce " .. #data)
         print("Response: ", dataToString(data)) 
         if addr~=invertor.address then
+            print("incorrect address " .. addr)
             return
         end
         if #data < (3 + count + 2) then
@@ -41,7 +43,7 @@ return function(invertor, sUart, RW_pin)
     local sendData = struct.pack(">BBHH", invertor.address, 0x03, 0x0206, 0x06)   
     local crc = crc16(sendData)
     --set callback on what we waiting
-    --print("Requested: ", dataToString(sendData))
+    print("Requested: ", dataToString(sendData))
     sUart:on("data", 5 + 0x06*2, callback)
     --send data
     gpio.write(RW_pin, gpio.HIGH)

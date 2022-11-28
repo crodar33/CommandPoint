@@ -11,6 +11,15 @@ if inverterCmdMod==3 then
 else
     inverterCmdModTmp = inverterCmdModTmp 
 end
+
+if #battery.state > 0 then
+    if bit.band(battery.state[3], 0x03)>0 and battery.SOC<100 then
+        --cell imbalance, ask to charge
+        inverterCmdModTmp = 1
+        print("cell balance error, request to charge")
+    end
+end
+
 sendStatus, sendFlag = dofile("can_sendCanMessage.lc")(0x030F, {
     struct.pack("<H", inverterCmdModTmp),
     struct.pack("<H", 0), 
