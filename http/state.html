@@ -1,5 +1,5 @@
 Up time: <?= tmr.time() ?>S<br/>
-Battery state:<br/>
+<b>Battery state:</b><br/>
 <div class='registers'>
     <div>
         Status:
@@ -20,16 +20,18 @@ Battery state:<br/>
         <?= inverterCmdMod==1 and "force change" or "" ?>
         <?= inverterCmdMod==2 and "don't use" or "" ?>
         <?= inverterCmdMod==3 and "Turbo chagrge" or "" ?>
-        <?= inverterCmdMod~=0 and (inverterModTimer - tmr.time()) or "" ?>
+        <?= inverterCmdMod==4 and "Balance charge" or "" ?>
+        <?= inverterModTimer~=0 and (inverterModTimer-tmr.time()) or "" ?>
         <form action="/better-inverter-state" method="post">
             Change state
             <select name="state">
                 <option value="0">Normal</option>
                 <option value="1">Force charge</option>
                 <option value="2">Don't use</option>
-                <option value="3">Turbo chagrge</option>
+                <option value="3">Turbo charge</option>
+                <option value="4">Balance charge</option>
             </select>
-            Interval <input value="10" name="time"> minutes
+            Interval <input value="10" name="time" /> minutes
             <br>
             <button type="submit">Update</button>
         </form>

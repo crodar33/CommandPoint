@@ -4,20 +4,22 @@
 --local cmdForcedStandby = 2
 if inverterCmdMod > 0 and inverterModTimer < tmr.time() then
     inverterCmdMod = 0
+    inverterModTimer = 0
 end
 local inverterCmdModTmp = 0
-if inverterCmdMod==3 then
-    inverterCmdModTmp = 1 
-else
-    inverterCmdModTmp = inverterCmdModTmp 
-end
 
 if #battery.state > 0 then
     if bit.band(battery.state[3], 0x03)>0 and battery.SOC<100 then
         --cell imbalance, ask to charge
-        inverterCmdModTmp = 1
+        inverterCmdMod = 1
         print("cell balance error, request to charge")
     end
+end
+
+if inverterCmdMod==2 then 
+    inverterCmdModTmp = 2 
+elseif inverterCmdMod > 0 then
+    inverterCmdModTmp = 1 
 end
 
 sendStatus, sendFlag = dofile("can_sendCanMessage.lc")(0x030F, {

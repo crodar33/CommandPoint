@@ -35,6 +35,8 @@ if (inverterCmdMod==3 and batTemp < 700) then
     SOC = 90
 elseif (inverterCmdMod==3 and batTemp >= 700) then
     inverterCmdMod = 0
+elseif (inverterCmdMod==4 and SOC>99) then
+    chargeA = 20
 end
 
 --print(batTemp, chargeA)
