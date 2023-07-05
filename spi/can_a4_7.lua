@@ -22,6 +22,7 @@ elseif inverterCmdMod > 0 then
     inverterCmdModTmp = 1 
 end
 
+--print("Battery command ", inverterCmdModTmp)
 sendStatus, sendFlag = dofile("can_sendCanMessage.lc")(0x030F, {
     struct.pack("<H", inverterCmdModTmp),
     struct.pack("<H", 0), 

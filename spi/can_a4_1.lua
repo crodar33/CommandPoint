@@ -39,7 +39,7 @@ elseif (inverterCmdMod==4 and SOC>99) then
     chargeA = 20
 end
 
---print(batTemp, chargeA)
+--print("Charge values: ", chargeV, chargeA)
 sendStatus, sendFlag, msg = dofile("can_sendCanMessage.lc")(0x0351, {
     struct.pack("<H", chargeV), 
     struct.pack("<H", chargeA), 

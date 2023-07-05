@@ -2,7 +2,6 @@
 local SOC = struct.unpack("<h", struct.pack("H", battery.SOC))
 local SOH = struct.unpack("<h", struct.pack("H", battery.SOH))
 if inverterCmdMod==3 then
-    chargeA = 50
     SOC = 90
 elseif inverterCmdMod==4 and SOC>99 then
     SOC = 99

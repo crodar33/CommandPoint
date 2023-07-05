@@ -4,7 +4,7 @@ alarm2 = 0
 warn1 = 0
 warn2 = 0
 if #battery.state > 0 then
-    if bit.band(battery.state[1], 0x11)>0 then
+    if bit.band(battery.state[0], 0x11)>0 then
         --temp high
         warn1 = bit.bor(warn1, 0x0040)
     end
