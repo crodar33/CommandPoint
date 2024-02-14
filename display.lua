@@ -1,3 +1,5 @@
+--TM1637
+--https://puntoflotante.net/DATASHEET-TM1637.pdf
 digsMap = {}
 digsMap["nil"] = 0x00
 digsMap[0] = 0xFC
@@ -18,14 +20,19 @@ digsMap["C"] = 0xF0
 
 i2c.setup(0, 12, 0, i2c.SLOW)
 
+--init
 i2c.start(0)
 i2c.write(0, 0x02)
 i2c.stop(0)
+--display epty value
 i2c.start(0)
 i2c.write(0, 0x03, digsMap["-"], digsMap["-"], digsMap["-"], digsMap["-"])
 i2c.stop(0)
+
+--display on and brightnes
 i2c.start(0)
-i2c.write(0, 0x51)
+--i2c.write(0, 0x51)
+i2c.write(0, 0x01)
 i2c.stop(0)
 
 local step = 0
