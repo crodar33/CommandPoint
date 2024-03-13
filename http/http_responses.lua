@@ -1,17 +1,3 @@
-function bbVal(num, format, div)
-    num = num + 1
-    local val = battery.remoteState.registers[num]
-    if div == nil then div = 1 end
-    if val == '-' or val == nil then
-        return '-'
-    end
-    --if #val ~= 2 then
-    --    return 'X'
-    --end
-    local tmp = struct.pack("H", val)
-    return struct.unpack(format, tmp) / div
-end
-
 
 local function getNextLine(file) 
     local buf, s1, s2, subf, p1, p2, t
@@ -53,9 +39,25 @@ local function processFile(sck, filename)
                 newRow = getNextLine(file)
                 if newRow ~= nil then buf = buf .. newRow end
                 --print(filename, #buf, node.heap(), newRow)
-            until #buf > 150 or newRow == nil
+            until #buf > 1000 or newRow == nil
             --print(filename, #buf, node.heap(), buf)
             sck:send(buf)
+            coroutine.yield()
+        until newRow == nil
+    else
+        sck:send(filename .. " not found ")
+    end 
+end
+
+local function sendFile(sck, filename) 
+    if file.open(filename, "r") then
+        repeat
+            local newRow = file.read()
+            if (newRow == nil) then
+                file.close()
+                return
+            end
+            sck:send(newRow)
             coroutine.yield()
         until newRow == nil
     else
@@ -67,6 +69,7 @@ end
 local M
 M = {}
 M.processFile = processFile
+M.sendFile = sendFile
 
 M.returnHeader = function(sck)
     processFile(sck, "header.html")

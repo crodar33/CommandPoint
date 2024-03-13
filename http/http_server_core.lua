@@ -14,7 +14,8 @@ return function()
 
         local function onReceive(connection, data) 
             connectionHandler = coroutine.create(function(connection, data) 
-                local headers = dofile("http_server_header_parser.lc")(data)
+                --local headers = dofile("http_server_header_parser.lc")(data)
+                local headers = http_server.parse_header(data)
                 if (headers==nil) then
                     print("bad http request, no header parsed")
                     return false

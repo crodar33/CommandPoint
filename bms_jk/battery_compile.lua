@@ -12,14 +12,11 @@ local compile = function(f)
 end
 
 local serverFiles = {
-   'can_module.lua',
-   'can_formatState.lua',
-   'can_formatTXCTRL.lua',
-   'can_init_can.lua',
-   'can_reset.lua'
+   'battery.lua',
+   'jk_read_all.lua',
 }
 
 for i, f in ipairs(serverFiles) do 
     compile(f) 
 end
---file.remove("can_compile.lua")
+file.remove("battery_compile.lua")

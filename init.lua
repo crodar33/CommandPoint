@@ -85,6 +85,7 @@ wifi.eventmon.register(wifi.eventmon.STA_GOT_IP, wifiGotIpEvent)
 wifi.eventmon.register(wifi.eventmon.STA_DISCONNECTED, wifiDisconnectEvent)
 
 httpMuted = 0
+node.setcpufreq(node.CPU160MHZ)
 
 -- GPIO4-RX pin 4
 -- GPIO2-TX pin 2
@@ -93,11 +94,13 @@ httpMuted = 0
 RW_pin = 3
 RX_pin = 4
 TX_pin = 2
-sUart = softuart.setup(9600, TX_pin, RX_pin)
+print("init battary")
+sUart = softuart.setup(115200, TX_pin, RX_pin)
 gpio.mode(RW_pin, gpio.OUTPUT)
 
 battery = dofile("battery.lc")(1, sUart, RW_pin)
 battery:startPullData()
+print("battery started pull")
 --battery:stopPullData()
 --stop inverter pull
 --inverter = dofile("sofar_hyd6es.lua")(10, sUart, RW_pin)

@@ -1,23 +1,56 @@
 -- HTTP router
 return function(httpServer, sck, headers)
-    if headers.url=='/' then
-        httpServer.sendHeader(sck, dofile("http_headers.lc")[200])
+    if headers.url == '/' then
+        httpServer.sendHeader(sck, dofile("http_headers.lc")['200cachecompesed'])
         local help = dofile("http_responses.lc")
-        help.returnHeader(sck)
-        help.returnState(sck)
-        help.returnFooter(sck)
+        help.sendFile(sck, "main.html.gz")
         help = nil
-    elseif headers.url=='/statte_full' then
-        httpServer.sendHeader(sck, dofile("http_headers.lc")[200])
+    elseif headers.url == '/favicon.png' then
+        httpServer.sendHeader(sck, dofile("http_headers.lc")['200image'])
         local help = dofile("http_responses.lc")
-        help.returnHeader(sck)
-        if battery ~= nil then        
-            help.processFile(sck, "state_full.html")
-        else        
-            sck:send("No battery state")
-        end
-        help.returnFooter(sck)
+        help.sendFile(sck, "favicon.png")
         help = nil
+    elseif headers.url == '/favicon.ico' then
+        httpServer.sendHeader(sck, dofile("http_headers.lc")['200image'])
+        local help = dofile("http_responses.lc")
+        help.sendFile(sck, "favicon.png")
+        help = nil
+    elseif headers.url == '/inverter_full_data' then
+        httpServer.sendHeader(sck, dofile("http_headers.lc")['200binary'])
+        sck:send(struct.pack(">f>f>f>f>f>f>f>f>f>f>H>H>H>H", 
+            tmr.time(), 
+            battery.SOC, 
+            battery.voltage, 
+            battery.current,
+            battery.cicled_capacity,
+            battery.temp[0],
+            battery.temp[1],
+            battery.temp[2],
+            battery.cicles,
+            battery.last_update,
+            battery.warnings,
+            battery.messages,
+            battery.status,
+            battery.cellCount)
+        )
+        sck:send(struct.pack(">f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f",
+            battery.cellVoltage[0],
+            battery.cellVoltage[1],
+            battery.cellVoltage[2],
+            battery.cellVoltage[3],
+            battery.cellVoltage[4],
+            battery.cellVoltage[5],
+            battery.cellVoltage[6],
+            battery.cellVoltage[7],
+            battery.cellVoltage[8],
+            battery.cellVoltage[9],
+            battery.cellVoltage[10],
+            battery.cellVoltage[11],
+            battery.cellVoltage[12],
+            battery.cellVoltage[13],
+            battery.cellVoltage[14],
+            battery.cellVoltage[15])
+        )
     elseif headers.url=='/battery-stop-pull' then
         battery:stopPullData()
         httpServer.sendHeader(sck, dofile("http_headers.lc")[301])

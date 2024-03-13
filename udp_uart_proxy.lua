@@ -1,5 +1,5 @@
 --send to udp broadcast information about state
-if (wifi.sta.getip()) then
+if (wifi.sta.getip() and battery!=nil) then
     
     local socket = net.createUDPSocket()
     local v1 = 0

@@ -1,6 +1,6 @@
 --Frame 1 battery charge voltage, DC charge current limitation, DC discharge current limitation, Battery discharge voltage
 local chargeV = 568
-local chargeA = 500
+local chargeA = 450
 local dischargeA = 650
 local cutFoffVoltage = 490
 local SOC = struct.unpack("<h", struct.pack("H", battery.SOC))
@@ -31,7 +31,7 @@ elseif (batTemp > 400 and chargeA > 50) then
 end
 
 if (inverterCmdMod==3 and batTemp < 700) then
-    chargeA = 500
+    chargeA = 450
     SOC = 90
 elseif (inverterCmdMod==3 and batTemp >= 700) then
     inverterCmdMod = 0
@@ -39,10 +39,12 @@ elseif (inverterCmdMod==4 and SOC>99) then
     chargeA = 20
 end
 
+local canBuss = require "can_module"
 --print("Charge values: ", chargeV, chargeA)
-sendStatus, sendFlag, msg = dofile("can_sendCanMessage.lc")(0x0351, {
+sendStatus, sendFlag, msg = canBuss.sendCanMessage(0x0351, {
     struct.pack("<H", chargeV), 
     struct.pack("<H", chargeA), 
     struct.pack("<H", dischargeA), 
     struct.pack("<H", cutFoffVoltage)
 })
+package.loaded.can_module = nil

@@ -8,8 +8,8 @@ if inverterCmdMod > 0 and inverterModTimer < tmr.time() then
 end
 local inverterCmdModTmp = 0
 
-if #battery.state > 0 then
-    if bit.band(battery.state[3], 0x03)>0 and battery.SOC<100 then
+if battery.warnings > 0 then
+    if bit.band(battery.warnings, 0x20)>0 and battery.SOC<100 then
         --cell imbalance, ask to charge
         inverterCmdMod = 1
         print("cell balance error, request to charge")
@@ -22,10 +22,12 @@ elseif inverterCmdMod > 0 then
     inverterCmdModTmp = 1 
 end
 
+local canBuss = require "can_module"
 --print("Battery command ", inverterCmdModTmp)
-sendStatus, sendFlag = dofile("can_sendCanMessage.lc")(0x030F, {
+sendStatus, sendFlag = canBuss.sendCanMessage(0x030F, {
     struct.pack("<H", inverterCmdModTmp),
     struct.pack("<H", 0), 
     struct.pack("<H", 0), 
     struct.pack("<H", 0), 
 })
+package.loaded.can_module = nil

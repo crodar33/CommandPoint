@@ -31,8 +31,10 @@ i2c.stop(0)
 
 --display on and brightnes
 i2c.start(0)
---i2c.write(0, 0x51)
-i2c.write(0, 0x01)
+--i2c.write(0, 0x11) --1/6
+i2c.write(0, 0x91) --2/16
+--i2c.write(0, 0x51) --4/16
+--i2c.write(0, 0xf1) --16/16
 i2c.stop(0)
 
 local step = 0

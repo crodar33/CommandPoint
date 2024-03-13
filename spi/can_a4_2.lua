@@ -6,9 +6,11 @@ if inverterCmdMod==3 then
 elseif inverterCmdMod==4 and SOC>99 then
     SOC = 99
 end
-sendStatus, sendFlag = dofile("can_sendCanMessage.lc")(0x0355, {
+local canBuss = require "can_module"
+sendStatus, sendFlag = canBuss.sendCanMessage(0x0355, {
     struct.pack("<H", SOC), --SOC
     struct.pack("<H", SOH), --SOH
     struct.pack("<H", 0), 
     struct.pack("<H", 0)
 })
+package.loaded.can_module = nil
