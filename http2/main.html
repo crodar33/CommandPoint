@@ -126,11 +126,11 @@
                         el.style.cssText = "background-color: rgba(255,0,0,0.2);";
                     } else if (diff > 0.1) {
                         el.style.cssText = "background-color: rgba(255,0,0,0.1);";
-                    } else if (diff < 0.3) {
+                    } else if (diff < -0.3) {
                         el.style.cssText = "background-color: rgba(0,0,255,0.5);";
-                    } else if (diff < 0.2) {
+                    } else if (diff < -0.2) {
                         el.style.cssText = "background-color: rgba(0,0,255,0.2);";
-                    } else if (diff < 0.1) {
+                    } else if (diff < -0.1) {
                         el.style.cssText = "background-color: rgba(0,0,255,0.1);";
                     }
                     if (Math.abs(midV - higestV) > 0.3 && Math.abs(v - higestV) < 0.01) {
