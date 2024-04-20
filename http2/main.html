@@ -43,6 +43,35 @@
             #menu-state {
                 display: none;
             }
+            #history_list {
+                margin: 0px;
+                max-height: 15em;
+                overflow: scroll;
+                padding: 0px 15px 0px 0px;
+            }
+            #history_list ol {
+                margin: 0px;
+                padding: 0px 0px 0px 25px;
+                max-height: 8em;
+                overflow: scroll;
+            }
+            #history_list li {
+            }
+            #history_list li div {
+                display: inline-block;
+                cursor: pointer;
+            }
+            #history_list li span {
+            }
+            #history_list li span:after {
+                display: block;
+                content: "x";
+                float: right;
+                color: rgba(0,0,0,0.9);
+                margin: 0px 18px 0px 5px;
+                cursor: pointer;
+            }
+
             @media screen and (max-width: 980px) {
                 body {
                     font-size: 3em;
@@ -77,6 +106,7 @@
         </style>
         <script>
             function updateData(rawData) {
+                document.getElementById("showTime").innerHTML = getFineDateTime(lastTime);
                 let warnings = stateView.getUint16(38);
                 let messages = stateView.getUint16(40);
                 let status = stateView.getUint16(42);
@@ -86,7 +116,7 @@
                 document.getElementById("battery_volatage").innerText = stateView.getFloat32(8).toFixed(2);
                 document.getElementById("battery_current").innerText = stateView.getFloat32(12).toFixed(2);
                 document.getElementById("status").innerText = stateView.getFloat32(12) >= 0 ? 'charge' : 'dischage';
-                document.getElementById("battary_cicled_capacity").innerText = stateView.getFloat32(16);
+                document.getElementById("battary_cicled_capacity").innerText = stateView.getFloat32(16).toFixed(4);
                 document.getElementById("battary_teperature1").innerText = stateView.getFloat32(20).toFixed(2);
                 document.getElementById("battary_teperature2").innerText = stateView.getFloat32(24).toFixed(2);
                 document.getElementById("battary_teperature3").innerText = stateView.getFloat32(28).toFixed(2);
@@ -106,7 +136,7 @@
                 let midV = 0;
                 for (let i = 0; i < 16; i++) {
                     let v = stateView.getFloat32(48 + i * 4);
-                    document.getElementById("cell" + i + "_voltage").innerText = v.toFixed(4);
+                    document.getElementById("cell" + i + "_voltage").innerText = v.toFixed(3);
                     if (v > higestV) {
                         higestV = v;
                     }
@@ -132,23 +162,127 @@
                         el.style.cssText = "background-color: rgba(0,0,255,0.2);";
                     } else if (diff < -0.1) {
                         el.style.cssText = "background-color: rgba(0,0,255,0.1);";
+                    } else {
+                        el.style.cssText = "";
                     }
-                    if (Math.abs(midV - higestV) > 0.3 && Math.abs(v - higestV) < 0.01) {
+                    if (Math.abs(midV - higestV) > 0.1 && Math.abs(v - higestV) < 0.05) {
                         el.style.cssText = "background-color: rgba(255,0,0,0.6);";
                     }
-                    if (Math.abs(midV - lovestV) > 0.3 && Math.abs(v - lovestV) < 0.01) {
+                    if (Math.abs(midV - lovestV) > 0.1 && Math.abs(v - lovestV) < 0.05) {
                         el.style.cssText = "background-color: rgba(0,0,255,0.6);";
                     }
                 }
 
+                document.getElementById("cell_min_voltage").innerText = lovestV.toFixed(3);
+                document.getElementById("cell_max_voltage").innerText = higestV.toFixed(3);
+                document.getElementById("cell_mid_voltage").innerText = midV.toFixed(3);
+
                 document.getElementById("mos_charging").innerText = ((status & 0x01) > 0);
                 document.getElementById("mos_discharge").innerText = ((status & 0x02) > 0);
                 document.getElementById("equalization").innerText = ((status & 0x04) > 0);
-                document.getElementById("mode").innerText = 'x';
+
+                let mode = stateView.getUint16(112);
+                let mode_time = stateView.getUint16(114);
+                document.getElementById("mode").innerText = mode + " " + mode_time;
             }
 
             /* @var stateView DataView */
             var stateView = null;
+            var lastTime = null;
+
+            function formated2D(v) {
+                if (v < 10) {
+                    return "0" + v;
+                }
+                return v;
+            }
+
+            function getFineDate(v) {
+                const t = new Date(v);
+                return t.getFullYear() + '-' + formated2D(t.getMonth()) + '-' + formated2D(t.getDate());
+            }
+
+            function getFineTime(v) {
+                const t = new Date(v);
+                return formated2D(t.getHours()) + '-' + formated2D(t.getMinutes()) + '-' + formated2D(t.getSeconds());
+            }
+
+            function getFineDateTime(v) {
+                return getFineDate(v) + " " + getFineTime(v);
+            }
+
+            function aSerialize(buffer) {
+                let r = "";
+                const view = new DataView(buffer);
+                for (let i = 0; i < buffer.byteLength; i++) {
+                    r += String.fromCharCode(view.getUint8(i));
+                }
+                return r;
+            }
+
+            function put2history(data) {
+                /* @var rectords array */
+                let records = JSON.parse(localStorage.getItem('history')) ?? [];
+                if (records.length > 200) {
+                    records.pop();
+                }
+                const codedData = aSerialize(data.buffer);
+                lastTime = Date.now();
+                records.unshift({time: lastTime, data: codedData});
+                localStorage.setItem('history', JSON.stringify(records));
+                updateHistoryList();
+            }
+
+            function removeHistoryItem(record) {
+                let records = JSON.parse(localStorage.getItem('history')) ?? [];
+                let newList = records.filter(i => i.time !== record.time);
+                localStorage.setItem('history', JSON.stringify(newList));
+                updateHistoryList();
+            }
+
+            function str2ab(str) {
+                var buf = new ArrayBuffer(str.length); // 2 bytes for each char
+                var bufView = new Uint8Array(buf);
+                for (var i = 0, strLen = str.length; i < strLen; i++) {
+                    bufView[i] = str.charCodeAt(i);
+                }
+                return buf;
+            }
+
+            function showFromHistory(record) {
+                lastTime = record.time;
+                const buffer = str2ab(record.data);
+                stateView = new DataView(buffer);
+                updateData();
+            }
+
+            function updateHistoryList() {
+                const historyItem = document.getElementById("history_list");
+                historyItem.innerHTML = '';
+                let lastDate = null;
+                let historyList = null;
+                for (const record of JSON.parse(localStorage.getItem('history'))) {
+                    const date = getFineDate(record.time)
+                    if (date !== lastDate) {
+                        lastDate = date;
+                        const dateCaption = document.createElement('div');
+                        dateCaption.innerText = date;
+                        historyItem.appendChild(dateCaption);
+                        historyList = document.createElement('ol');
+                        historyItem.appendChild(historyList);
+                    }
+
+                    const el = document.createElement('li');
+                    const text = document.createElement('div');
+                    const delButton = document.createElement('span');
+                    text.innerText = getFineTime(record.time);
+                    el.appendChild(text);
+                    el.appendChild(delButton);
+                    text.onclick = () => showFromHistory(record);
+                    delButton.onclick = () => removeHistoryItem(record);
+                    historyList.appendChild(el);
+                }
+            }
 
             function requestData() {
                 const request = new XMLHttpRequest();
@@ -159,19 +293,45 @@
                 request.addEventListener("readystatechange", () => {
                     if (request.readyState === 4 && request.status === 200) {
                         stateView = new DataView(request.response);
+                        put2history(stateView);
                         updateData();
                     }
                 });
-
                 request.send();
             }
 
             document.addEventListener('DOMContentLoaded', () => {
-                //const byteArray = new ArrayBuffer("");
-                //stateView = new DataView(byteArray);
-                //updateData([]);
+                /* test */
+//                const byteArray = new ArrayBuffer(200);
+//                const t1 = new Uint8Array(byteArray);
+//                const t2 = new Uint32Array(byteArray);
+//                for (let i = 0; i < 200; i++) {
+//                    t1[i] = Math.ceil(Math.random() * 3000)/100;
+//                    t1[i] = 0x3f;
+//                    t1[i] = Math.ceil(Math.random() * 255);
+//                }
+//                stateView = new DataView(byteArray);
+//                console.log(stateView.getFloat32(0));
+//                put2history(stateView);
+//                updateData(stateView);
+                /* live */
                 requestData();
             });
+
+            function updateState(form) {
+                console.log(form);
+                var formData = new FormData(form);
+                const request = new XMLHttpRequest();
+                request.open(form.method, form.action);
+                request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                request.addEventListener("readystatechange", () => {
+                    console.log(request);
+                    if (request.readyState === 4) {
+                        alert('done');
+                    }
+                });
+                request.send(new URLSearchParams(formData));
+            }
         </script>
     </head>
     <body>
@@ -182,9 +342,13 @@
                 <a href='/statte_full'>Full state</a>
                 <a href="#" onclick="requestData()">Read state</a>
             </label>
-
+            <div>
+                <h3>History</h3>
+                <div id="history_list"></div>
+            </div>
         </div>
         <div class='base'>
+            <div id="showTime"></div>
             <h2>Base</h2>
             Up time: <span id="uptime"></span><br/>
             <b>Battery state</b><br/>
@@ -200,37 +364,53 @@
                 Temperature 3: <span id="battary_teperature3"></span><br/>
                 Cycle Numbers: <span id="battary_cycles"></span><br/>
                 Cycle Numbers cap: <span id="battary_cicled_capacity"></span><br/>
-                Errors: B0: <span id="error_b0"></span>
-                B1:<span id="error_b1"></span>
-                B2: <span id="error_b2"></span>
-                B3: <span id="error_b3"></span>
-                B4: <span id="error_b4"></span>
-                B5: <span id="error_b5"></span>
-                B6: <span id="error_b6"></span>
-                B7: <span id="error_b7"></span>
-                <br/>
+                Errors: <p style="margin: 0px; padding-left: 10px;">
+                    B0: <span id="error_b0"></span>
+                    B1: <span id="error_b1"></span>
+                    B2: <span id="error_b2"></span>
+                    B3: <span id="error_b3"></span><br/>
+                    B4: <span id="error_b4"></span>
+                    B5: <span id="error_b5"></span>
+                    B6: <span id="error_b6"></span>
+                    B7: <span id="error_b7"></span>
+                </p>
             </div>
         </div>
         <div class="cells">
             <h2>Cells</h2>
             <ul>
-                <li>Cell 1 V.: <span id="cell0_voltage"></span></li>
-                <li>Cell 2 V.: <span id="cell1_voltage"></span></li>
-                <li>Cell 3 V.: <span id="cell2_voltage"></span></li>
-                <li>Cell 4 V.: <span id="cell3_voltage"></span></li>
-                <li>Cell 5 V.: <span id="cell4_voltage"></span></li>
-                <li>Cell 6 V.: <span id="cell5_voltage"></span></li>
-                <li>Cell 7 V.: <span id="cell6_voltage"></span></li>
-                <li>Cell 8 V.: <span id="cell7_voltage"></span></li>
-                <li>Cell 9 V.: <span id="cell8_voltage"></span></li>
-                <li>Cell 10 V.: <span id="cell9_voltage"></span></li>
-                <li>Cell 11 V.: <span id="cell10_voltage"></span></li>
-                <li>Cell 12 V.: <span id="cell11_voltage"></span></li>
-                <li>Cell 13 V.: <span id="cell12_voltage"></span></li>
-                <li>Cell 14 V.: <span id="cell13_voltage"></span></li>
-                <li>Cell 15 V.: <span id="cell14_voltage"></span></li>
-                <li>Cell 16 V.: <span id="cell15_voltage"></span></li>
+                <li>Cell min V.: <span id="cell_min_voltage"></span></li>
+                <li>Cell max V.: <span id="cell_max_voltage"></span></li>
+                <li>Cell mid V.: <span id="cell_mid_voltage"></span></li>
             </ul>
+            <br/>
+            <table>
+                <tr>
+                    <td>
+                        <ul>
+                            <li>Cell 1 V.: <span id="cell0_voltage"></span></li>
+                            <li>Cell 2 V.: <span id="cell1_voltage"></span></li>
+                            <li>Cell 3 V.: <span id="cell2_voltage"></span></li>
+                            <li>Cell 4 V.: <span id="cell3_voltage"></span></li>
+                            <li>Cell 5 V.: <span id="cell4_voltage"></span></li>
+                            <li>Cell 6 V.: <span id="cell5_voltage"></span></li>
+                            <li>Cell 7 V.: <span id="cell6_voltage"></span></li>
+                            <li>Cell 8 V.: <span id="cell7_voltage"></span></li>
+                        </ul>
+                    </td><td>
+                        <ul>
+                            <li>Cell 9 V.: <span id="cell8_voltage"></span></li>
+                            <li>Cell 10 V.: <span id="cell9_voltage"></span></li>
+                            <li>Cell 11 V.: <span id="cell10_voltage"></span></li>
+                            <li>Cell 12 V.: <span id="cell11_voltage"></span></li>
+                            <li>Cell 13 V.: <span id="cell12_voltage"></span></li>
+                            <li>Cell 14 V.: <span id="cell13_voltage"></span></li>
+                            <li>Cell 15 V.: <span id="cell14_voltage"></span></li>
+                            <li>Cell 16 V.: <span id="cell15_voltage"></span></li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
         </div>
         <div class="status">
             <h2>Status</h2>
@@ -242,7 +422,7 @@
         <div class="commands">
             <h2>Commands</h2>
             Mode: <span id="mode"></span>
-            <form action="/better-inverter-state" method="post">
+            <form onsubmit="updateState(this); return false;" action="/better-inverter-state" method="post">
                 Change state
                 <select name="state">
                     <option value="0">Normal</option>
@@ -252,7 +432,7 @@
                     <option value="4">Balance charge</option>
                 </select>
                 <br/>
-                Interval <input value="10" name="time" /> minutes
+                Interval <input value="10" name="time" size="5" /> minutes
                 <button type="submit">Update</button>
             </form>
         </div>

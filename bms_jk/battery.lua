@@ -5,9 +5,9 @@ return function(address, sUart, RW_pin)
     battery.SOH = 0
     battery.voltage = 0
     battery.current = 0
-    battery.warnings = nil
-    battery.messages = nil
-    battery.status = nil
+    battery.warnings = 0
+    battery.messages = 0
+    battery.status = 0
     battery.mos_charging = 0
     battery.mos_discharge = 0
     battery.equalizing = 0
@@ -15,8 +15,7 @@ return function(address, sUart, RW_pin)
     battery.cicled_capacity = 0
     battery.temp = {0, 0, 0}
     battery.cellCount = 0
-    battery.cellVoltage = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-    battery.temp2 = 0
+    battery.cellVoltage = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
     battery.cicles = 0
     battery.last_update = 0
 

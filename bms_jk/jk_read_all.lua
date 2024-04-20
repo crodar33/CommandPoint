@@ -15,6 +15,8 @@ return function(battery, sUart, RW_pin)
     local getCurent = function(v)
         if bit.band(v, 0x8000) == 0 then
             v = -1 * bit.band(v, 0x7FFF)
+        else
+            v = bit.band(v, 0x7FFF)
         end
         return v / 100
     end
@@ -33,17 +35,23 @@ return function(battery, sUart, RW_pin)
         for i=0, battery.cellCount - 1 do
             local tmp = struct.unpack(">H", data, i*3 + 15) / 1000
             if tmp<5 then
-                battery.cellVoltage[i] = tmp
-                --print(string.format("battary voltage %d %0.3f", i + 1, battery.cellVoltage[i]))
+                battery.cellVoltage[i + 1] = tmp
+                --print(string.format("battary voltage %d %0.3f", i + 1, battery.cellVoltage[i + 1]))
             end
         end
-        battery.temp[0] = getTemp(struct.unpack(">H", data, 63), battery.temp[0])
-        battery.temp[1] = getTemp(struct.unpack(">H", data, 66), battery.temp[1])
-        battery.temp[2] = getTemp(struct.unpack(">H", data, 69), battery.temp[2])
-        --print(string.format("temp %0.3f, %0.3f, %0.3f", battery.temp[0], battery.temp[1], battery.temp[2]))
-        battery.voltage = struct.unpack(">H", data, 72) / 100
+        battery.temp[1] = getTemp(struct.unpack(">H", data, 63), battery.temp[1])
+        battery.temp[2] = getTemp(struct.unpack(">H", data, 66), battery.temp[2])
+        battery.temp[3] = getTemp(struct.unpack(">H", data, 69), battery.temp[3])
+        --print(string.format("temp %0.3f, %0.3f, %0.3f", battery.temp[1], battery.temp[2], battery.temp[3]))
+        local tmpVoltage = struct.unpack(">H", data, 72) / 100
+        if tmpVoltage < 80 then
+            battery.voltage = tmpVoltage
+        end
         battery.current = getCurent(struct.unpack(">H", data, 75))
-        battery.SOC = struct.unpack("B", data, 78) 
+        local tmpSOC = struct.unpack("B", data, 78)
+        if tmpSOC < 101 then
+            battery.SOC = tmpSOC
+        end
         print(string.format("Stat %0.3fV, %0.3fA, %d%%", battery.voltage, battery.current, battery.SOC))
         battery.cicles = struct.unpack(">H", data, 82) 
         battery.cicled_capacity = struct.unpack(">L", data, 85) 

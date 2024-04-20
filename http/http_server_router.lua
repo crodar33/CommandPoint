@@ -23,9 +23,9 @@ return function(httpServer, sck, headers)
             battery.voltage, 
             battery.current,
             battery.cicled_capacity,
-            battery.temp[0],
             battery.temp[1],
             battery.temp[2],
+            battery.temp[3],
             battery.cicles,
             battery.last_update,
             battery.warnings,
@@ -34,7 +34,6 @@ return function(httpServer, sck, headers)
             battery.cellCount)
         )
         sck:send(struct.pack(">f>f>f>f>f>f>f>f>f>f>f>f>f>f>f>f",
-            battery.cellVoltage[0],
             battery.cellVoltage[1],
             battery.cellVoltage[2],
             battery.cellVoltage[3],
@@ -49,7 +48,12 @@ return function(httpServer, sck, headers)
             battery.cellVoltage[12],
             battery.cellVoltage[13],
             battery.cellVoltage[14],
-            battery.cellVoltage[15])
+            battery.cellVoltage[15],
+            battery.cellVoltage[16])
+        )
+        sck:send(struct.pack(">H>H", 
+            inverterCmdMod, 
+            inverterModTimer)
         )
     elseif headers.url=='/battery-stop-pull' then
         battery:stopPullData()
@@ -84,7 +88,7 @@ return function(httpServer, sck, headers)
             inverterModTimer = tmr.time() + tonumber(headers.post.time) * 60
             print("Set new battery mod " .. inverterCmdMod .." on time " .. (inverterModTimer - tmr.time()))
         end
-        httpServer.sendHeader(sck, dofile("http_headers.lc")[301])
+        httpServer.sendHeader(sck, dofile("http_headers.lc")[200])
     else
         httpServer.sendHeader(sck, dofile("http_headers.lc")[404])
     end
