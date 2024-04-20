@@ -24,7 +24,7 @@ end
 if math.max(unpack(battery.cellVoltage))>3.6 then
     chargeA = 50;
 end
-if math.min(unpack(battery.cellVoltage))<3.0 then
+if math.min(unpack(battery.cellVoltage))<2.9 then
     dischargeA = 0;
 end
 

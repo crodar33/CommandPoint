@@ -15,7 +15,7 @@ return function(address, sUart, RW_pin)
     battery.cicled_capacity = 0
     battery.temp = {0, 0, 0}
     battery.cellCount = 0
-    battery.cellVoltage = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+    battery.cellVoltage = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
     battery.cicles = 0
     battery.last_update = 0
 
