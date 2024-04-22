@@ -113,8 +113,11 @@
                 document.getElementById("uptime").innerText = stateView.getFloat32(0).toFixed(0);
                 document.getElementById("soc").innerText = stateView.getFloat32(4).toFixed(0);
                 document.getElementById("soh").innerText = "~";
-                document.getElementById("battery_volatage").innerText = stateView.getFloat32(8).toFixed(2);
-                document.getElementById("battery_current").innerText = stateView.getFloat32(12).toFixed(2);
+                const V = stateView.getFloat32(8).toFixed(2);
+                const A = stateView.getFloat32(12).toFixed(2)
+                document.getElementById("battery_volatage").innerText = V;
+                document.getElementById("battery_current").innerText = A;
+                document.getElementById("battery_power").innerText = (V * A).toFixed(2);
                 document.getElementById("status").innerText = stateView.getFloat32(12) >= 0 ? 'charge' : 'dischage';
                 document.getElementById("battary_cicled_capacity").innerText = stateView.getFloat32(16).toFixed(4);
                 document.getElementById("battary_teperature1").innerText = stateView.getFloat32(20).toFixed(2);
@@ -302,18 +305,18 @@
 
             document.addEventListener('DOMContentLoaded', () => {
                 /* test */
-//                const byteArray = new ArrayBuffer(200);
-//                const t1 = new Uint8Array(byteArray);
-//                const t2 = new Uint32Array(byteArray);
-//                for (let i = 0; i < 200; i++) {
-//                    t1[i] = Math.ceil(Math.random() * 3000)/100;
-//                    t1[i] = 0x3f;
-//                    t1[i] = Math.ceil(Math.random() * 255);
-//                }
-//                stateView = new DataView(byteArray);
-//                console.log(stateView.getFloat32(0));
-//                put2history(stateView);
-//                updateData(stateView);
+                const byteArray = new ArrayBuffer(200);
+                const t1 = new Uint8Array(byteArray);
+                const t2 = new Uint32Array(byteArray);
+                for (let i = 0; i < 200; i++) {
+                    t1[i] = Math.ceil(Math.random() * 3000) / 100;
+                    t1[i] = 0x3f;
+                    t1[i] = Math.ceil(Math.random() * 255);
+                }
+                stateView = new DataView(byteArray);
+                console.log(stateView.getFloat32(0));
+                put2history(stateView);
+                updateData(stateView);
                 /* live */
                 requestData();
             });
@@ -357,6 +360,7 @@
                 <br/>
                 Voltage: <span id="battery_volatage"></span>U<br/>
                 Current: <span id="battery_current"></span>A<br/>
+                Power: <span id="battery_power"></span>Watt<br/>
                 SOC: <span id="soc"></span><br/>
                 SOH: <span id="soh"></span><br/>
                 Temperature 1: <span id="battary_teperature1"></span><br/>

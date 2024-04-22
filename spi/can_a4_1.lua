@@ -1,8 +1,8 @@
 --Frame 1 battery charge voltage, DC charge current limitation, DC discharge current limitation, Battery discharge voltage
 local chargeV = 576 --3.60*16
-local chargeA = 450
+local chargeA = 450 --2.81*16
 local dischargeA = 650
-local cutFoffVoltage = 490
+local cutFoffVoltage = 450
 local SOC = struct.unpack("<h", struct.pack("H", battery.SOC))
 local SOH = struct.unpack("<h", struct.pack("H", battery.SOH))
 
@@ -17,26 +17,12 @@ elseif SOC>90 then
     chargeA = 100
 elseif SOC>80 then
     chargeA = 150
+elseif SOC <= 50 then
+    dischargeA = 400
+elseif SOC <= 40 then
+    dischargeA = 200
 elseif SOC <= 10 then
     dischargeA = 0
-end
-
-if math.max(unpack(battery.cellVoltage))>3.6 then
-    chargeA = 50;
-end
-if math.min(unpack(battery.cellVoltage))<2.9 then
-    dischargeA = 0;
-end
-
-if ((batTemp > 550) ) then
-    dischargeA = 0
-elseif ((batTemp > 500) ) then
-    dischargeA = dischargeA/2
-end
-if (batTemp > 450) then
-    chargeA = 0
-elseif (batTemp > 400 and chargeA > 50) then
-    chargeA = 50
 end
 
 if (inverterCmdMod==3 and batTemp < 700) then
@@ -47,6 +33,26 @@ elseif (inverterCmdMod==3 and batTemp >= 700) then
 elseif (inverterCmdMod==4 and SOC<99) then
     chargeA = 50
 end
+
+if ((batTemp > 500) ) then
+    dischargeA = 0
+elseif ((batTemp > 400) ) then
+    dischargeA = dischargeA/2
+end
+
+if math.max(unpack(battery.cellVoltage))>3.6 then
+    chargeA = 50;
+end
+if math.min(unpack(battery.cellVoltage))<2.8 then
+    dischargeA = 0;
+end
+
+if (batTemp > 450) then
+    chargeA = 0
+elseif (batTemp > 400 and chargeA > 50) then
+    chargeA = 50
+end
+
 
 local canBuss = require "can_module"
 --print("Charge values: ", chargeV, chargeA)
