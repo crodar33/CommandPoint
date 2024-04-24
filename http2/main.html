@@ -305,18 +305,18 @@
 
             document.addEventListener('DOMContentLoaded', () => {
                 /* test */
-                const byteArray = new ArrayBuffer(200);
-                const t1 = new Uint8Array(byteArray);
-                const t2 = new Uint32Array(byteArray);
-                for (let i = 0; i < 200; i++) {
-                    t1[i] = Math.ceil(Math.random() * 3000) / 100;
-                    t1[i] = 0x3f;
-                    t1[i] = Math.ceil(Math.random() * 255);
-                }
-                stateView = new DataView(byteArray);
-                console.log(stateView.getFloat32(0));
-                put2history(stateView);
-                updateData(stateView);
+//                const byteArray = new ArrayBuffer(200);
+//                const t1 = new Uint8Array(byteArray);
+//                const t2 = new Uint32Array(byteArray);
+//                for (let i = 0; i < 200; i++) {
+//                    t1[i] = Math.ceil(Math.random() * 3000) / 100;
+//                    t1[i] = 0x3f;
+//                    t1[i] = Math.ceil(Math.random() * 255);
+//                }
+//                stateView = new DataView(byteArray);
+//                console.log(stateView.getFloat32(0));
+//                put2history(stateView);
+//                updateData(stateView);
                 /* live */
                 requestData();
             });
