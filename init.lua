@@ -110,6 +110,8 @@ print("battery started pull")
 canStates = 1
 inverterCmdMod = 0
 inverterModTimer = 0
+inverterMaxCurrent = 0
+inveterChargeCorrection = 10
 batTemp = 0
 httpServer = dofile("http_server_core.lc")()
 dofile("can_a1_test_init4.lua")

@@ -86,9 +86,13 @@ return function(httpServer, sck, headers)
             --set forc battery mode
             inverterCmdMod = tonumber(headers.post.state)
             inverterModTimer = tmr.time() + tonumber(headers.post.time) * 60
+            inverterMaxCurrent = math.ceil(tonumber(headers.post.maxChangeCurrent) * 10)
             print("Set new battery mod " .. inverterCmdMod .." on time " .. (inverterModTimer - tmr.time()))
         end
         httpServer.sendHeader(sck, dofile("http_headers.lc")[200])
+    elseif headers.url=='/restart' then
+        httpServer.sendHeader(sck, dofile("http_headers.lc")[301])
+        node.restart() 
     else
         httpServer.sendHeader(sck, dofile("http_headers.lc")[404])
     end

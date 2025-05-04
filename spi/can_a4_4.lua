@@ -1,8 +1,8 @@
 --Frame 4 Alarms, Warnings - not implemented
-alarm1 = 0
-alarm2 = 0
-warn1 = 0
-warn2 = 0
+local alarm1 = 0
+local alarm2 = 0
+local warn1 = 0
+local warn2 = 0
 
 if math.max(unpack(battery.temp))>40 then
     --temp high

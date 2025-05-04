@@ -103,6 +103,12 @@
                     display: block;
                 }
             }
+            #maxChangeCurrent {
+                display: none;
+            }
+            #mode_timer {
+                margin-left: 6px
+            }
         </style>
         <script>
             function updateData(rawData) {
@@ -186,7 +192,8 @@
 
                 let mode = stateView.getUint16(112);
                 let mode_time = stateView.getUint16(114);
-                document.getElementById("mode").innerText = mode + " " + mode_time;
+                document.getElementById("mode").innerText = mode;
+                document.getElementById("mode_timer").innerText = mode_time;
             }
 
             /* @var stateView DataView */
@@ -335,6 +342,23 @@
                 });
                 request.send(new URLSearchParams(formData));
             }
+
+            function chargeStateChange(event) {
+                const element = document.getElementById("maxChangeCurrent");
+                if (parseInt(event.target.value) === 3) {
+                    element.style.display = 'block';
+                } else {
+                    element.style.display = '';
+                }
+                console.log(element);
+            }
+
+            setInterval(() => {
+                let v = parseInt(document.getElementById("mode_timer").innerHTML);
+                if (v > 0) {
+                    document.getElementById("mode_timer").innerHTML = v - 1;
+                }
+            }, 1000)
         </script>
     </head>
     <body>
@@ -342,6 +366,7 @@
             <input type="checkbox" name="menu-state" id="menu-state" checked="" />
             <label for="menu-state" class='left-menu'>
                 <a href='/'>Index</a>
+                <a href='/restart'>Restart</a>
                 <a href='/statte_full'>Full state</a>
                 <a href="#" onclick="requestData()">Read state</a>
             </label>
@@ -425,17 +450,17 @@
         </div>
         <div class="commands">
             <h2>Commands</h2>
-            Mode: <span id="mode"></span>
+            Mode: <span id="mode"></span><span id="mode_timer"></span>
             <form onsubmit="updateState(this); return false;" action="/better-inverter-state" method="post">
                 Change state
-                <select name="state">
+                <select name="state" onchange="chargeStateChange(event)">
                     <option value="0">Normal</option>
-                    <option value="1">Force charge</option>
+                    <option value="1">Charge</option>
                     <option value="2">Don't use</option>
-                    <option value="3">Turbo charge</option>
-                    <option value="4">Balance charge</option>
+                    <option value="3">Force charge</option>
                 </select>
                 <br/>
+                <div id="maxChangeCurrent">Max change current <input type="number" min="0" max="50" step="0.1" value="10" name="maxChangeCurrent"></div>
                 Interval <input value="10" name="time" size="5" /> minutes
                 <button type="submit">Update</button>
             </form>

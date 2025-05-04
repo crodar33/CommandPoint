@@ -1,6 +1,6 @@
 --Frame 1 battery charge voltage, DC charge current limitation, DC discharge current limitation, Battery discharge voltage
-local chargeV = 576 --3.60*16
-local chargeA = 450 --2.81*16
+local chargeV = 576 --3.60*16=57.6 - 2.81*16=44.96
+local chargeA = 450 --
 local dischargeA = 650
 local cutFoffVoltage = 450
 local SOC = struct.unpack("<h", struct.pack("H", battery.SOC))
@@ -22,16 +22,16 @@ elseif SOC <= 50 then
 elseif SOC <= 40 then
     dischargeA = 200
 elseif SOC <= 10 then
-    dischargeA = 0
+    dischargeA = 50
 end
 
-if (inverterCmdMod==3 and batTemp < 700) then
-    chargeA = 450
-    SOC = 90
-elseif (inverterCmdMod==3 and batTemp >= 700) then
+if (inverterCmdMod==3 and batTemp < 500) then
+    chargeA = inverterMaxCurrent
+    if (SOC > 90) then
+        SOC = 90
+    end
+elseif (inverterCmdMod==3 and batTemp >= 500) then
     inverterCmdMod = 0
-elseif (inverterCmdMod==4 and SOC<99) then
-    chargeA = 50
 end
 
 if ((batTemp > 500) ) then
@@ -40,9 +40,16 @@ elseif ((batTemp > 400) ) then
     dischargeA = dischargeA/2
 end
 
-if math.max(unpack(battery.cellVoltage))>3.6 then
-    chargeA = 50;
+if math.max(unpack(battery.cellVoltage))>3.60 then
+    inveterChargeCorrection = 0
+    chargeA = 10;
+elseif math.max(unpack(battery.cellVoltage))>3.4 then
+    inveterChargeCorrection = math.max(0, inveterChargeCorrection - 1)
+    chargeA = 50 + math.ceil((chargeA - 50) * (inveterChargeCorrection / 10));
+else
+    inveterChargeCorrection = math.min(10, inveterChargeCorrection + 1)
 end
+
 if math.min(unpack(battery.cellVoltage))<2.8 then
     dischargeA = 0;
 end
