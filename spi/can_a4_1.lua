@@ -9,6 +9,7 @@ local SOH = struct.unpack("<h", struct.pack("H", battery.SOH))
 
 batTemp = struct.unpack("<h", struct.pack("H", battery.temp[1]*10))
 
+--charge limits
 if SOC >= 100 then
     chargeA = 0
 elseif SOC>95 then
@@ -17,12 +18,14 @@ elseif SOC>90 then
     chargeA = 100
 elseif SOC>80 then
     chargeA = 150
-elseif SOC <= 50 then
+end
+--discharge limits
+if SOC > 50 then
+    dischargeA = 650
+elseif SOC > 20 then
     dischargeA = 400
-elseif SOC <= 40 then
+else
     dischargeA = 200
-elseif SOC <= 10 then
-    dischargeA = 50
 end
 
 if (inverterCmdMod==3 and batTemp < 500) then
@@ -42,7 +45,7 @@ end
 
 if math.max(unpack(battery.cellVoltage))>3.60 then
     inveterChargeCorrection = 0
-    chargeA = 10;
+    chargeA = 20;
 elseif math.max(unpack(battery.cellVoltage))>3.4 then
     inveterChargeCorrection = math.max(0, inveterChargeCorrection - 1)
     chargeA = 50 + math.ceil((chargeA - 50) * (inveterChargeCorrection / 10));
@@ -50,7 +53,7 @@ else
     inveterChargeCorrection = math.min(10, inveterChargeCorrection + 1)
 end
 
-if math.min(unpack(battery.cellVoltage))<2.8 then
+if math.min(unpack(battery.cellVoltage))<2.6 then
     dischargeA = 0;
 end
 

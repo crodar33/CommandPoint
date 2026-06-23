@@ -22,11 +22,15 @@
                 vertical-align: top;
                 display: inline-block;
             }
+            .left-menu {
+                display: flex;
+                flex-direction: column;
+                gap:8px;
+            }
             .left-menu > a {
-                display: block;
                 background: #111;
-                width: 90%;
-                margin: 4px;
+                width: 100%;
+                box-sizing: border-box;
                 padding: 4px;
                 border-radius: 10px;
                 text-align: center;
@@ -77,8 +81,18 @@
                     font-size: 3em;
                     flex-direction: column;
                 }
+                body > div {
+                    padding: 16px;
+                }
+                input, select, button {
+                    font-size: 0.8em;
+                    margin: 4px;
+                }
+                button, select {
+                    padding-left: 16px;
+                    padding-right: 16px;
+                }
                 .left-menu {
-                    display: block;
                     width: 3em;
                     height: 3em;
                     background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIxMCUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGxpbmUgeDE9IjUlIiB5MT0iMjAlIiB4Mj0iOTUlIiB5Mj0iMjAlIj48L2xpbmU+PGxpbmUgeDE9IjUlIiB5MT0iNTAlIiB4Mj0iOTUlIiB5Mj0iNTAlIj48L2xpbmU+PGxpbmUgeDE9IjUlIiB5MT0iODAlIiB4Mj0iOTUlIiB5Mj0iODAlIj48L2xpbmU+PC9zdmc+")
@@ -101,6 +115,10 @@
                 }
                 #menu-state:checked + .left-menu > a {
                     display: block;
+                    padding: 16px;
+                }
+                .cells ul {
+                    margin-left: 36px;
                 }
             }
             #maxChangeCurrent {
@@ -125,7 +143,7 @@
                 document.getElementById("battery_current").innerText = A;
                 document.getElementById("battery_power").innerText = (V * A).toFixed(2);
                 document.getElementById("status").innerText = stateView.getFloat32(12) >= 0 ? 'charge' : 'dischage';
-                document.getElementById("battary_cicled_capacity").innerText = stateView.getFloat32(16).toFixed(4);
+                document.getElementById("battary_cicled_capacity").innerText = Math.round(stateView.getFloat32(16).toFixed(4));
                 document.getElementById("battary_teperature1").innerText = stateView.getFloat32(20).toFixed(2);
                 document.getElementById("battary_teperature2").innerText = stateView.getFloat32(24).toFixed(2);
                 document.getElementById("battary_teperature3").innerText = stateView.getFloat32(28).toFixed(2);
@@ -456,8 +474,9 @@
                 <select name="state" onchange="chargeStateChange(event)">
                     <option value="0">Normal</option>
                     <option value="1">Charge</option>
-                    <option value="2">Don't use</option>
+                    <option value="20">Don't use</option>
                     <option value="3">Force charge</option>
+                    <option value="10">Force discharge</option>
                 </select>
                 <br/>
                 <div id="maxChangeCurrent">Max change current <input type="number" min="0" max="50" step="0.1" value="10" name="maxChangeCurrent"></div>

@@ -3,6 +3,8 @@ local SOC = struct.unpack("<h", struct.pack("H", battery.SOC))
 local SOH = struct.unpack("<h", struct.pack("H", battery.SOH))
 if (inverterCmdMod==3 and SOC > 90) then
     SOC = 90
+elseif (inverterCmdMod==10 and SOC < 60) then
+    SOC = 60
 end
 local canBuss = require "can_module"
 sendStatus, sendFlag = canBuss.sendCanMessage(0x0355, {
